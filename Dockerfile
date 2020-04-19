@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 golang:1.14.1-alpine AS builder
+FROM --platform=linux/amd64 golang:1.14.2-alpine AS builder
 
 WORKDIR /go/src/app
 COPY . .
