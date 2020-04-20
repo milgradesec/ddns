@@ -28,12 +28,18 @@ func main() {
 		log.Fatalf("extra command line arguments: %s", flag.Args())
 	}
 
-	provider, err := cf.New()
+	provider := os.Getenv("PROVIDER")
+	switch provider {
+	case "cloudflare":
+
+	}
+
+	p, err := cf.New()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	monitor := monitor.New(os.Getenv("CF_ZONE_NAME"), provider)
+	monitor := monitor.New(os.Getenv("CF_ZONE_NAME"), p)
 	monitor.Run()
 }
 

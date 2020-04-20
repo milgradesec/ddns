@@ -6,7 +6,7 @@ COPY . .
 ARG VERSION
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=arm GOARM=7 go build -v -ldflags "-s -w -X main.Version=${VERSION}" github.com/milgradesec/ddns/cmd/ddns
 
-FROM alpine:3.11.3
+FROM alpine:3.11.5
 
 RUN apk update && apk add --no-cache ca-certificates && \
     addgroup -S ddns && adduser -S -G ddns ddns
