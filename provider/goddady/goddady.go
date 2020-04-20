@@ -1,11 +1,13 @@
 package goddady
 
-type DNS struct {
-	domain string
-	apiKey string
-	secret string
+// API implements ProviderAPI interface
+type API struct {
+	domain string // GO_DOMAIN_NAME
+	apiKey string // GO_API_KEY
+	secret string // GO_SECRET
 }
 
-func New() *DNS {
+// New creates a Goddady DNS provider
+func New() *API {
 	return nil
 }

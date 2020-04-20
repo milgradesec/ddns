@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/cloudflare/cloudflare-go"
-	"github.com/milgradesec/ddns/monitor"
+	"github.com/milgradesec/ddns/pkg/ip"
 )
 
 // API implements ProviderAPI interface
@@ -37,7 +37,7 @@ func (cf *API) UpdateZone() error {
 		cf.id = id
 	}
 
-	ip, err := monitor.GetIP()
+	ip, err := ip.GetIP()
 	if err != nil {
 		return err
 	}
