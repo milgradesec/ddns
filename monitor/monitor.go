@@ -13,11 +13,11 @@ import (
 // Monitor detects public IP changes for a dns Zone
 type Monitor struct {
 	zone     string
-	provider provider.DNSProvider
+	provider provider.ProviderAPI
 }
 
 // New creates a new Monitor for a Zone with the selected Provider
-func New(zone string, provider provider.DNSProvider) *Monitor {
+func New(zone string, provider provider.ProviderAPI) *Monitor {
 	return &Monitor{
 		zone:     zone,
 		provider: provider,

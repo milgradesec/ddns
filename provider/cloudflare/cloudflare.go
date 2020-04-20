@@ -8,27 +8,27 @@ import (
 	"github.com/milgradesec/ddns/monitor"
 )
 
-// DNS implements Provider interface
-type DNS struct {
+// API implements ProviderAPI interface
+type API struct {
 	api *cloudflare.API
 	id  string
 }
 
 // New creates a Cloudflare DNS provider
-func New() (*DNS, error) {
+func New() (*API, error) {
 	api, err := cloudflare.New(os.Getenv("CF_API_KEY"), os.Getenv("CF_API_EMAIL"))
 	if err != nil {
 		return nil, err
 	}
 
-	cf := &DNS{
+	cf := &API{
 		api: api,
 	}
 	return cf, nil
 }
 
-// UpdateZone implements Provider interface
-func (cf *DNS) UpdateZone() error {
+// UpdateZone implements ProviderAPI interface
+func (cf *API) UpdateZone() error {
 	if cf.id == "" {
 		id, err := cf.api.ZoneIDByName(os.Getenv("CF_ZONE_NAME"))
 		if err != nil {
