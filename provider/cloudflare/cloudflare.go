@@ -37,7 +37,7 @@ func (cf *API) UpdateZone() error {
 		cf.id = id
 	}
 
-	ip, err := ip.GetIP()
+	publicIP, err := ip.GetIP()
 	if err != nil {
 		return err
 	}
@@ -51,7 +51,7 @@ func (cf *API) UpdateZone() error {
 	for _, r := range records {
 		switch r.Type {
 		case "A":
-			if r.Content != ip {
+			if r.Content != publicIP {
 				update = true
 			}
 		}
@@ -59,13 +59,13 @@ func (cf *API) UpdateZone() error {
 			rr := cloudflare.DNSRecord{
 				Type:    r.Type,
 				Name:    r.Name,
-				Content: ip,
+				Content: publicIP,
 				Proxied: r.Proxied,
 			}
 			if err := cf.api.UpdateDNSRecord(cf.id, r.ID, rr); err != nil {
 				return err
 			}
-			fmt.Printf("%s updated from %s to %s\n", r.Name, r.Content, ip)
+			fmt.Printf("%s updated from %s to %s\n", r.Name, r.Content, publicIP)
 			update = false
 		}
 	}
