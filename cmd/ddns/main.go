@@ -12,6 +12,7 @@ import (
 )
 
 var (
+	// Version set from Makefile
 	Version string
 )
 
@@ -28,15 +29,9 @@ func main() {
 		log.Fatalf("extra command line arguments: %s", flag.Args())
 	}
 
-	provider := os.Getenv("PROVIDER")
-	switch provider {
-	case "cloudflare":
-
-	}
-
 	p, err := cf.New()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Printf("Cloudflare API login failed: %v\n", err)
 	}
 
 	monitor := monitor.New(os.Getenv("CF_ZONE_NAME"), p)
