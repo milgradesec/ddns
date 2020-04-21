@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log"
 	"os"
 	"runtime"
 
@@ -26,12 +25,14 @@ func main() {
 
 	flag.Parse()
 	if len(flag.Args()) > 0 {
-		log.Fatalf("extra command line arguments: %s", flag.Args())
+		fmt.Printf("extra command line arguments: %s", flag.Args())
+		os.Exit(1)
 	}
 
 	p, err := cf.New()
 	if err != nil {
 		fmt.Printf("Cloudflare API login failed: %v\n", err)
+		os.Exit(1)
 	}
 
 	monitor := monitor.New(os.Getenv("CF_ZONE_NAME"), p)
