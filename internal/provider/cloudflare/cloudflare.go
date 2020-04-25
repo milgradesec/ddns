@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/cloudflare/cloudflare-go"
-	"github.com/milgradesec/ddns/pkg/ip"
+	"github.com/milgradesec/ddns/internal/ip"
 )
 
 // API implements ProviderAPI interface
@@ -25,6 +25,11 @@ func New() (*API, error) {
 		api: api,
 	}
 	return cf, nil
+}
+
+// Name implements Provider interface
+func (cf *API) Name() string {
+	return "Cloudflare"
 }
 
 // UpdateZone implements ProviderAPI interface

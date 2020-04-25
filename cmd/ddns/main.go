@@ -6,8 +6,8 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/milgradesec/ddns/monitor"
-	cf "github.com/milgradesec/ddns/provider/cloudflare"
+	"github.com/milgradesec/ddns/internal/monitor"
+	cf "github.com/milgradesec/ddns/internal/provider/cloudflare"
 )
 
 var (
