@@ -1,4 +1,3 @@
-// Package service registers ddns to run as a Windows Service
 // +build windows
 package service
 
@@ -31,10 +30,12 @@ func Install() error {
 	}
 
 	srvConfig := mgr.Config{
+		StartType:   mgr.StartAutomatic,
 		DisplayName: serviceName,
+		Description: "Dynamic DNS client",
 	}
 
-	srv, err = m.CreateService(serviceName, bin, srvConfig, "is", "auto-started")
+	srv, err = m.CreateService(serviceName, bin, srvConfig)
 	if err != nil {
 		return err
 	}

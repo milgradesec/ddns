@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/milgradesec/ddns/internal/provider"
+	"golang.org/x/sys/windows/svc"
 )
 
 const defaultInterval = 3 * time.Minute
@@ -55,4 +56,39 @@ func (m *Monitor) Run() {
 		}
 	}()
 	<-stop
+}
+
+// Execute implements svc.Handler interface
+func (m *Monitor) Execute(args []string, r <-chan svc.ChangeRequest, changes chan<- svc.Status) (ssec bool, errno uint32) {
+	const cmdsAccepted = svc.AcceptStop | svc.AcceptShutdown | svc.AcceptPauseAndContinue
+	changes <- svc.Status{State: svc.StartPending}
+	changes <- svc.Status{State: svc.Running, Accepts: cmdsAccepted}
+
+	go func() {
+		m.Run()
+	}()
+
+	go func() {
+		for {
+			select {
+			case c := <-r:
+				switch c.Cmd {
+				case svc.Interrogate:
+					changes <- c.CurrentStatus
+					time.Sleep(100 * time.Millisecond)
+					changes <- c.CurrentStatus
+				case svc.Stop, svc.Shutdown:
+					break
+				case svc.Pause:
+					changes <- svc.Status{State: svc.Paused, Accepts: cmdsAccepted}
+				case svc.Continue:
+					changes <- svc.Status{State: svc.Running, Accepts: cmdsAccepted}
+				default:
+				}
+			}
+		}
+	}()
+
+	changes <- svc.Status{State: svc.StopPending}
+	return
 }
