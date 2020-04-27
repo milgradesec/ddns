@@ -35,6 +35,7 @@ services:
   ddns:
     image: ddns:tag
     environment:
+      - PROVIDER=Cloudflare
       - CF_API_EMAIL=your_email
       - CF_API_KEY=api_key
       - CF_ZONE_NAME=domain_name
