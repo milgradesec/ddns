@@ -10,6 +10,10 @@ all: build
 build:
 	go build $(BUILDFLAGS) $(IMPORT_PATH)/cmd/ddns
 
+.PHONY: docker
+docker:
+	docker build . -t ddns:$(VERSION)
+
 .PHONY: release
 release:
 	docker buildx build --platform $(DOCKER_PLATFORM) --build-arg VERSION=$(VERSION) . -t milgradesec/ddns:latest -t milgradesec/ddns:$(VERSION) --push
