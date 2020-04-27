@@ -17,11 +17,11 @@ const defaultInterval = 3 * time.Minute
 // SIGHUP signal
 type Monitor struct {
 	Zone string
-	prov provider.ProviderAPI
+	prov provider.API
 }
 
 // New creates a new Monitor for a Zone with the selected Provider
-func New(zone string, provider provider.ProviderAPI) *Monitor {
+func New(zone string, provider provider.API) *Monitor {
 	return &Monitor{
 		Zone: zone,
 		prov: provider,
