@@ -2,12 +2,15 @@ package monitor
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
+	"github.com/milgradesec/ddns/internal/config"
 	"github.com/milgradesec/ddns/internal/provider"
+	cf "github.com/milgradesec/ddns/internal/provider/cloudflare"
 )
 
 const defaultInterval = 3 * time.Minute
@@ -16,22 +19,21 @@ const defaultInterval = 3 * time.Minute
 // every 3 min interval, can be triggered at any time by sending a
 // SIGHUP signal
 type Monitor struct {
-	Zone string
-	prov provider.API
+	config config.Config
+	prov   provider.API
 }
 
-// New creates a new Monitor for a Zone with the selected Provider
-func New(zone string, provider provider.API) *Monitor {
+// New creates a Monitor with the provided configuration
+func New(cfg config.Config) (*Monitor, error) {
+	p, err := cf.New(cfg)
+	if err != nil {
+		return nil, fmt.Errorf("error creating Cloudflare API client: %v", err)
+	}
+
 	return &Monitor{
-		Zone: zone,
-		prov: provider,
-	}
-}
-
-func (m *Monitor) callProvider() {
-	if err := m.prov.UpdateZone(); err != nil {
-		fmt.Printf("error updating zone %s: %v\n", m.Zone, err)
-	}
+		config: cfg,
+		prov:   p,
+	}, nil
 }
 
 // Run starts monitoring
@@ -49,10 +51,16 @@ func (m *Monitor) Run() {
 				m.callProvider()
 
 			case <-sighup:
-				fmt.Printf("SIGHUP received: updating records for %s\n", m.Zone)
+				log.Printf("SIGHUP received: updating records for %s\n", m.config.Zone)
 				m.callProvider()
 			}
 		}
 	}()
 	<-stop
+}
+
+func (m *Monitor) callProvider() {
+	if err := m.prov.UpdateZone(); err != nil {
+		fmt.Printf("error updating zone %s: %v\n", m.config.Zone, err)
+	}
 }

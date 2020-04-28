@@ -1,12 +1,13 @@
 package cloudflare
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
 	"github.com/cloudflare/cloudflare-go"
 	"github.com/milgradesec/ddns/internal/config"
-	"github.com/milgradesec/ddns/internal/ip"
+	"github.com/milgradesec/ddns/pkg/ip"
 )
 
 // API implements provider.API interface
@@ -47,7 +48,7 @@ func (cf *API) UpdateZone() error {
 	if cf.id == "" {
 		id, err := cf.api.ZoneIDByName(cf.cfg.Zone)
 		if err != nil {
-			return err
+			return errors.New("cloudflare API error: ZoneIDByName command failed")
 		}
 		cf.id = id
 	}
@@ -59,29 +60,24 @@ func (cf *API) UpdateZone() error {
 
 	records, err := cf.api.DNSRecords(cf.id, cloudflare.DNSRecord{})
 	if err != nil {
-		return err
+		return errors.New("cloudflare API error: failed to list DNS records")
 	}
 
-	var update bool
 	for _, r := range records {
 		switch r.Type {
 		case "A":
 			if r.Content != publicIP {
-				update = true
+				rr := cloudflare.DNSRecord{
+					Type:    r.Type,
+					Name:    r.Name,
+					Content: publicIP,
+					Proxied: r.Proxied,
+				}
+				if err := cf.api.UpdateDNSRecord(cf.id, r.ID, rr); err != nil {
+					return fmt.Errorf("error updating %s: %v", r.Name, err)
+				}
+				fmt.Printf("%s updated from %s to %s\n", r.Name, r.Content, publicIP)
 			}
-		}
-		if update {
-			rr := cloudflare.DNSRecord{
-				Type:    r.Type,
-				Name:    r.Name,
-				Content: publicIP,
-				Proxied: r.Proxied,
-			}
-			if err := cf.api.UpdateDNSRecord(cf.id, r.ID, rr); err != nil {
-				return err
-			}
-			fmt.Printf("%s updated from %s to %s\n", r.Name, r.Content, publicIP)
-			update = false
 		}
 	}
 	return nil

@@ -2,5 +2,8 @@
     "provider": "Cloudflare",
     "zone": "domain.com",
     "email": "email@domain.com",
-    "apikey": "difiowehfhsahsdshndjqwh"
+    "apikey": "difiowehfhsahsdshndjqwh",
+    "exclude": [
+        "example.domain.com"
+    ]
 }

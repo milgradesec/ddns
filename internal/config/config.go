@@ -8,10 +8,11 @@ import (
 
 // Config stores Provider configuration
 type Config struct {
-	Provider string `json:"provider"`
-	Zone     string `json:"zone"`
-	Email    string `json:"email"`
-	APIKey   string `json:"apikey"`
+	Provider string   `json:"provider"`
+	Zone     string   `json:"zone"`
+	Email    string   `json:"email"`
+	APIKey   string   `json:"apikey"`
+	Exclude  []string `json:"exclude"`
 }
 
 // IsEmpty checks if Config struct is empty
