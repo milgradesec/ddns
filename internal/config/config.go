@@ -2,7 +2,6 @@ package config
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"reflect"
 )
@@ -26,13 +25,13 @@ func Load(file string) (Config, error) {
 
 	f, err := os.Open(file)
 	if err != nil {
-		return cfg, fmt.Errorf("failed to open %s: %v", file, err)
+		return cfg, err
 	}
 	defer f.Close()
 
 	err = json.NewDecoder(f).Decode(&cfg)
 	if err != nil {
-		return cfg, fmt.Errorf("failed to load config from %s: %v", file, err)
+		return cfg, err
 	}
 	return cfg, nil
 }
