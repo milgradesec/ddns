@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"reflect"
 )
 
 // Config stores Provider configuration
@@ -12,6 +13,11 @@ type Config struct {
 	Zone     string `json:"zone"`
 	Email    string `json:"email"`
 	APIKey   string `json:"apikey"`
+}
+
+// IsEmpty checks if Config struct is empty
+func (cfg Config) IsEmpty() bool {
+	return reflect.DeepEqual(cfg, Config{})
 }
 
 // Load config from file

@@ -5,24 +5,34 @@ import (
 	"os"
 
 	"github.com/cloudflare/cloudflare-go"
+	"github.com/milgradesec/ddns/internal/config"
 	"github.com/milgradesec/ddns/internal/ip"
 )
 
-// API implements ProviderAPI interface
+// API implements provider.API interface
 type API struct {
+	cfg config.Config
+
 	api *cloudflare.API
 	id  string
 }
 
 // New creates a Cloudflare DNS provider
-func New() (*API, error) {
-	api, err := cloudflare.New(os.Getenv("CF_API_KEY"), os.Getenv("CF_API_EMAIL"))
+func New(cfg config.Config) (*API, error) {
+	if cfg.IsEmpty() {
+		cfg.APIKey = os.Getenv("CF_API_KEY")
+		cfg.Email = os.Getenv("CF_API_EMAIL")
+		cfg.Zone = os.Getenv("CF_ZONE_NAME")
+	}
+
+	api, err := cloudflare.New(cfg.APIKey, cfg.Email)
 	if err != nil {
 		return nil, err
 	}
 
 	cf := &API{
 		api: api,
+		cfg: cfg,
 	}
 	return cf, nil
 }
@@ -35,7 +45,7 @@ func (cf *API) Name() string {
 // UpdateZone implements ProviderAPI interface
 func (cf *API) UpdateZone() error {
 	if cf.id == "" {
-		id, err := cf.api.ZoneIDByName(os.Getenv("CF_ZONE_NAME"))
+		id, err := cf.api.ZoneIDByName(cf.cfg.Zone)
 		if err != nil {
 			return err
 		}
