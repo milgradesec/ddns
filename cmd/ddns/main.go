@@ -47,6 +47,7 @@ func main() {
 		if err != nil {
 			log.Fatalf("update error: %v", err)
 		}
+		os.Exit(0)
 	}
 
 	cfg, err := config.Load(*configFile)
