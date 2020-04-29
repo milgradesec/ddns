@@ -45,3 +45,9 @@ Start `ddns` especifiying the configuration file
 ~~~ cmd
 $ ddns -config config.json
 ~~~
+
+Update `ddns` to the latest version:
+
+~~~ cmd
+$ ddns -update
+~~~
