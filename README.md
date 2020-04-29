@@ -26,20 +26,22 @@ $ make docker
 
 ## How to Use
 
-Deploy with Docker Compose:
+Configuration example:
 
-~~~ yaml
-version: "3.7"
+~~~ json
+{
+    "provider": "Cloudflare",
+    "zone": "domain.com",
+    "email": "email@domain.com",
+    "apikey": "difiowehfhsahsdshndjqwh",
+    "exclude": [
+        "example.domain.com"
+    ]
+}
+~~~
 
-services:
-  ddns:
-    image: ddns:tag
-    environment:
-      - PROVIDER=Cloudflare
-      - CF_API_EMAIL=your_email
-      - CF_API_KEY=api_key
-      - CF_ZONE_NAME=domain_name
-    deploy:
-      restart_policy:
-        condition: on-failure
+Start `ddns`
+
+~~~ cmd
+$ ddns -config config.json
 ~~~
