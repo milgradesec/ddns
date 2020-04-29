@@ -12,6 +12,10 @@ import (
 
 const baseURL = "https://dl.paesacybersecurity.eu/ddns/"
 
+var (
+	errInvalidResponse = errors.New("invalid response from server")
+)
+
 type updateInfo struct {
 	Version string `json:"version"`
 	Sha256  string `json:"sha256"`
@@ -25,7 +29,7 @@ func checkForUpdateAndApply(version string) error {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return errors.New("http status code != 200")
+		return errInvalidResponse
 	}
 
 	var info updateInfo
@@ -35,7 +39,7 @@ func checkForUpdateAndApply(version string) error {
 	}
 
 	if info.Version == "" {
-		return errors.New("empty json response")
+		return errInvalidResponse
 	}
 
 	if info.Version != version {
@@ -49,7 +53,7 @@ func checkForUpdateAndApply(version string) error {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return errors.New("http status code != 200")
+		return errInvalidResponse
 	}
 
 	err = update.Apply(resp.Body, update.Options{})
