@@ -48,7 +48,7 @@ func checkForUpdateAndApply(version string) error {
 		log.Println("DDNS is up to date.")
 		return nil
 	}
-	log.Printf("New version %s available.\n", info.Version)
+	log.Printf("New version %s is available.\n", info.Version)
 
 	resp, err = http.Get(baseURL + info.Version + "/" + runtime.GOOS + "-" + runtime.GOARCH)
 	if err != nil {
