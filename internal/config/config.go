@@ -3,7 +3,6 @@ package config
 import (
 	"encoding/json"
 	"os"
-	"reflect"
 )
 
 // Config stores Provider configuration
@@ -15,9 +14,13 @@ type Config struct {
 	Exclude  []string `json:"exclude"`
 }
 
-// IsEmpty checks if Config struct is empty
-func (cfg Config) IsEmpty() bool {
-	return reflect.DeepEqual(cfg, Config{})
+func (c Config) IsExcluded(s string) bool {
+	for _, e := range c.Exclude {
+		if s == e {
+			return true
+		}
+	}
+	return false
 }
 
 // Load config from file

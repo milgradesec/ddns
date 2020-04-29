@@ -3,7 +3,7 @@ package cloudflare
 import (
 	"errors"
 	"fmt"
-	"os"
+	"log"
 
 	"github.com/cloudflare/cloudflare-go"
 	"github.com/milgradesec/ddns/internal/config"
@@ -20,12 +20,6 @@ type API struct {
 
 // New creates a Cloudflare DNS provider
 func New(cfg config.Config) (*API, error) {
-	if cfg.IsEmpty() {
-		cfg.APIKey = os.Getenv("CF_API_KEY")
-		cfg.Email = os.Getenv("CF_API_EMAIL")
-		cfg.Zone = os.Getenv("CF_ZONE_NAME")
-	}
-
 	api, err := cloudflare.New(cfg.APIKey, cfg.Email)
 	if err != nil {
 		return nil, err
@@ -64,6 +58,10 @@ func (cf *API) UpdateZone() error {
 	}
 
 	for _, r := range records {
+		if cf.cfg.IsExcluded(r.Name) {
+			continue
+		}
+
 		switch r.Type {
 		case "A":
 			if r.Content != publicIP {
@@ -76,7 +74,7 @@ func (cf *API) UpdateZone() error {
 				if err := cf.api.UpdateDNSRecord(cf.id, r.ID, rr); err != nil {
 					return fmt.Errorf("error updating %s: %v", r.Name, err)
 				}
-				fmt.Printf("%s updated from %s to %s\n", r.Name, r.Content, publicIP)
+				log.Printf("%s updated from %s to %s\n", r.Name, r.Content, publicIP)
 			}
 		}
 	}

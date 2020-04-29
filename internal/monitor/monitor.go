@@ -61,6 +61,6 @@ func (m *Monitor) Run() {
 
 func (m *Monitor) callProvider() {
 	if err := m.prov.UpdateZone(); err != nil {
-		fmt.Printf("error updating zone %s: %v\n", m.config.Zone, err)
+		log.Printf("error updating zone %s: %v\n", m.config.Zone, err)
 	}
 }
