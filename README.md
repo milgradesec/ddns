@@ -40,7 +40,7 @@ Configuration example:
 }
 ~~~
 
-Start `ddns`
+Start `ddns` especifiying the configuration file
 
 ~~~ cmd
 $ ddns -config config.json
