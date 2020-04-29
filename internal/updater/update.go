@@ -11,7 +11,6 @@ import (
 )
 
 const baseURL = "https://dl.paesacybersecurity.eu/ddns/"
-const updateURL = "https://dl.paesacybersecurity.eu/ddns/v1.4.0/windows-amd64"
 
 type updateInfo struct {
 	Version string `json:"version"`
@@ -35,7 +34,11 @@ func checkForUpdateAndApply(version string) error {
 		return err
 	}
 
-	if info.Version != "" && info.Version != version {
+	if info.Version == "" {
+		return errors.New("empty json response")
+	}
+
+	if info.Version != version {
 		log.Printf("New version %s available\n", info.Version)
 	}
 
