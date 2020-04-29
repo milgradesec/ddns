@@ -1,6 +1,8 @@
 package updater
 
 import (
+	"crypto"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"log"
@@ -56,7 +58,16 @@ func checkForUpdateAndApply(version string) error {
 		return errInvalidResponse
 	}
 
-	err = update.Apply(resp.Body, update.Options{})
+	checksum, err := hex.DecodeString(info.Sha256)
+	if err != nil {
+		return err
+	}
+
+	opts := update.Options{
+		Checksum: []byte(checksum),
+		Hash:     crypto.SHA256,
+	}
+	err = update.Apply(resp.Body, opts)
 	if err != nil {
 		return err
 	}
