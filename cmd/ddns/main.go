@@ -29,6 +29,10 @@ func main() {
 	)
 	flag.Parse()
 
+	if len(flag.Args()) > 0 {
+		log.Fatalf("error: extra command line arguments.")
+	}
+
 	if *version {
 		os.Exit(0)
 	}
@@ -43,7 +47,6 @@ func main() {
 		if err != nil {
 			log.Fatalf("update error: %v", err)
 		}
-		os.Exit(0)
 	}
 
 	cfg, err := config.Load(*configFile)
