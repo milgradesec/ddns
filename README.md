@@ -35,7 +35,8 @@ Configuration example:
     "email": "email@domain.com",
     "apikey": "difiowehfhsahsdshndjqwh",
     "exclude": [
-        "example.domain.com"
+        "example1.domain.com",
+        "example2.domain.com"
     ]
 }
 ~~~
