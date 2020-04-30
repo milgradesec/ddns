@@ -74,7 +74,7 @@ func (cf *API) UpdateZone() error {
 				if err := cf.api.UpdateDNSRecord(cf.id, r.ID, rr); err != nil {
 					return fmt.Errorf("error updating %s: %v", r.Name, err)
 				}
-				log.Printf("%s updated from %s to %s\n", r.Name, r.Content, publicIP)
+				log.Printf("[INFO] %s updated from %s to %s\n", r.Name, r.Content, publicIP)
 			}
 		}
 	}

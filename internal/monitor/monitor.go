@@ -8,6 +8,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/kardianos/service"
 	"github.com/milgradesec/ddns/internal/config"
 	"github.com/milgradesec/ddns/internal/provider"
 	cf "github.com/milgradesec/ddns/internal/provider/cloudflare"
@@ -36,6 +37,17 @@ func New(cfg config.Config) (*Monitor, error) {
 	}, nil
 }
 
+// Start implements service.Interface
+func (m *Monitor) Start(s service.Service) error {
+	go m.Run()
+	return nil
+}
+
+// Stop implements service.Interface
+func (m *Monitor) Stop(s service.Service) error {
+	return nil
+}
+
 // Run starts monitoring
 func (m *Monitor) Run() {
 	ticker := time.NewTicker(defaultInterval)
@@ -51,7 +63,7 @@ func (m *Monitor) Run() {
 				m.callProvider()
 
 			case <-sighup:
-				log.Printf("SIGHUP received: updating records for %s\n", m.config.Zone)
+				log.Printf("[INFO] SIGHUP received: updating records for %s\n", m.config.Zone)
 				m.callProvider()
 			}
 		}
@@ -61,6 +73,6 @@ func (m *Monitor) Run() {
 
 func (m *Monitor) callProvider() {
 	if err := m.prov.UpdateZone(); err != nil {
-		log.Printf("error updating zone %s: %v\n", m.config.Zone, err)
+		log.Printf("[ERROR] error updating zone %s: %v\n", m.config.Zone, err)
 	}
 }

@@ -12,8 +12,10 @@
             "program": "${workspaceFolder}/cmd/ddns",
             "env": {},
             "args": [
+                "-service",
+                "install",
                 "-config",
-                "../../test/config.json"
+                "D:/milgradesec/source/repos/ddns/test/config.json"
             ]
         }
     ]
