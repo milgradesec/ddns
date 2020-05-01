@@ -20,15 +20,14 @@ const defaultInterval = 3 * time.Minute
 // every 3 min interval, can be triggered at any time by sending a
 // SIGHUP signal
 type Monitor struct {
-	Config string
-
-	cfg config.Config
-	api provider.API
+	ConfigFile string
+	cfg        config.Config
+	api        provider.API
 }
 
 // Start implements service.Interface
 func (m *Monitor) Start(s service.Service) error {
-	cfg, err := config.Load(m.Config)
+	cfg, err := config.Load(m.ConfigFile)
 	if err != nil {
 		return fmt.Errorf("failed to load configuration: %v", err)
 	}
@@ -38,6 +37,7 @@ func (m *Monitor) Start(s service.Service) error {
 		return fmt.Errorf("error creating Cloudflare API client: %v", err)
 	}
 	m.api = cfAPI
+
 	go m.Run()
 	return nil
 }

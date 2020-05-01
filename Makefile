@@ -1,5 +1,6 @@
 VERSION:=$(shell git describe --tags --always --dirty="-dev")
 BUILDFLAGS:=-v -ldflags="-s -w -X main.Version=$(VERSION)"
+SYSTEM:=
 IMPORT_PATH:=github.com/milgradesec/ddns
 DOCKER_PLATFORM:=linux/arm/v7
 
@@ -8,7 +9,7 @@ all: build
 
 .PHONY: build
 build:
-	go build $(BUILDFLAGS) $(IMPORT_PATH)/cmd/ddns
+	$(SYSTEM) go build $(BUILDFLAGS) $(IMPORT_PATH)/cmd/ddns
 
 .PHONY: docker
 docker:

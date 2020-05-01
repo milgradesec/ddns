@@ -51,7 +51,7 @@ func main() {
 	}
 
 	m := &monitor.Monitor{
-		Config: *configFlag,
+		ConfigFile: *configFlag,
 	}
 
 	svcConfig := &service.Config{
