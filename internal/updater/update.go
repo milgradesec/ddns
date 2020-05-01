@@ -5,18 +5,15 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"errors"
-	"log"
 	"net/http"
 	"runtime"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/inconshreveable/go-update"
 )
 
 const baseURL = "https://dl.paesacybersecurity.eu/ddns/"
-
-var (
-	errInvalidResponse = errors.New("invalid response from server")
-)
 
 type updateInfo struct {
 	Version string `json:"version"`
@@ -31,7 +28,7 @@ func checkForUpdateAndApply(version string) error {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return errInvalidResponse
+		return errors.New("invalid response from server")
 	}
 
 	var info updateInfo
@@ -41,7 +38,7 @@ func checkForUpdateAndApply(version string) error {
 	}
 
 	if info.Version == "" {
-		return errInvalidResponse
+		return errors.New("invalid response from server")
 	}
 
 	if info.Version == version {
@@ -57,7 +54,7 @@ func checkForUpdateAndApply(version string) error {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return errInvalidResponse
+		return errors.New("invalid response from server")
 	}
 
 	checksum, err := hex.DecodeString(info.Sha256)

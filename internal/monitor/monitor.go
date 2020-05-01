@@ -2,11 +2,12 @@ package monitor
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/kardianos/service"
 	"github.com/milgradesec/ddns/internal/config"

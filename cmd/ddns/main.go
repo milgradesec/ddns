@@ -3,8 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log"
 	"runtime"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/kardianos/service"
 	"github.com/milgradesec/ddns/internal/monitor"
