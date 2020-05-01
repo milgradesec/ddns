@@ -20,25 +20,24 @@ const defaultInterval = 3 * time.Minute
 // every 3 min interval, can be triggered at any time by sending a
 // SIGHUP signal
 type Monitor struct {
-	config config.Config
-	prov   provider.API
-}
+	Config string
 
-// New creates a Monitor with the provided configuration
-func New(cfg config.Config) (*Monitor, error) {
-	p, err := cf.New(cfg)
-	if err != nil {
-		return nil, fmt.Errorf("error creating Cloudflare API client: %v", err)
-	}
-
-	return &Monitor{
-		config: cfg,
-		prov:   p,
-	}, nil
+	cfg config.Config
+	api provider.API
 }
 
 // Start implements service.Interface
 func (m *Monitor) Start(s service.Service) error {
+	cfg, err := config.Load(m.Config)
+	if err != nil {
+		return fmt.Errorf("failed to load configuration: %v", err)
+	}
+
+	cfAPI, err := cf.New(cfg)
+	if err != nil {
+		return fmt.Errorf("error creating Cloudflare API client: %v", err)
+	}
+	m.api = cfAPI
 	go m.Run()
 	return nil
 }
@@ -63,7 +62,7 @@ func (m *Monitor) Run() {
 				m.callProvider()
 
 			case <-sighup:
-				log.Printf("[INFO] SIGHUP received: updating records for %s\n", m.config.Zone)
+				log.Printf("[INFO] SIGHUP received: updating records for %s\n", m.cfg.Zone)
 				m.callProvider()
 			}
 		}
@@ -72,7 +71,7 @@ func (m *Monitor) Run() {
 }
 
 func (m *Monitor) callProvider() {
-	if err := m.prov.UpdateZone(); err != nil {
-		log.Printf("[ERROR] error updating zone %s: %v\n", m.config.Zone, err)
+	if err := m.api.UpdateZone(); err != nil {
+		log.Printf("[ERROR] error updating zone %s: %v\n", m.cfg.Zone, err)
 	}
 }

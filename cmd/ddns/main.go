@@ -4,11 +4,9 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"os"
 	"runtime"
 
 	"github.com/kardianos/service"
-	"github.com/milgradesec/ddns/internal/config"
 	"github.com/milgradesec/ddns/internal/monitor"
 	"github.com/milgradesec/ddns/internal/updater"
 )
@@ -36,12 +34,12 @@ func main() {
 	}
 
 	if *versionFlag {
-		os.Exit(0)
+		return
 	}
 
 	if *helpFlag {
 		flag.PrintDefaults()
-		os.Exit(0)
+		return
 	}
 
 	if *updateFlag {
@@ -49,30 +47,20 @@ func main() {
 		if err != nil {
 			log.Fatalf("[ERROR] update failed: %v.", err)
 		}
-		os.Exit(0)
+		return
 	}
 
-	cwd, err := os.Getwd()
-	if err != nil {
-		log.Fatal("Unable to find the path to the current directory")
-	}
-
-	cfg, err := config.Load(*configFlag)
-	if err != nil {
-		log.Fatalf("[ERROR] failed to load configuration: %v.", err)
-	}
-
-	m, err := monitor.New(cfg)
-	if err != nil {
-		log.Fatalf("[ERROR] %v.", err)
+	m := &monitor.Monitor{
+		Config: *configFlag,
 	}
 
 	svcConfig := &service.Config{
-		Name:             "ddns",
-		Description:      "Dynamic DNS client",
-		WorkingDirectory: cwd,
-		Arguments:        []string{"-config", *configFlag},
+		Name:        "ddns",
+		DisplayName: "Dynamic DNS service",
+		Description: "Dynamic DNS service",
+		Arguments:   []string{"-config", *configFlag},
 	}
+
 	svc, err := service.New(m, svcConfig)
 	if err != nil {
 		log.Fatalf("[ERROR] %v.", err)
@@ -82,46 +70,25 @@ func main() {
 		if err := service.Control(svc, *serviceFlag); err != nil {
 			log.Fatalf("[ERROR] %v", err)
 		}
+
+		switch *serviceFlag {
+		case "install":
+			log.Println("[INFO] service created successfully.")
+		case "uninstall":
+			log.Println("[INFO] service removed successfully.")
+		case "start":
+			log.Println("[INFO] service started.")
+		case "stop":
+			log.Println("[INFO] service stopped.")
+		case "restart":
+			log.Println("[INFO] service restarted.")
+		default:
+			log.Fatalf("[ERROR] invalid argument: %s.", *serviceFlag)
+		}
+		return
 	}
 
 	if err := svc.Run(); err != nil {
 		log.Fatalf("[ERROR] %v", err)
 	}
-
-	/*if *serviceFlag != "" {
-		switch *serviceFlag {
-		case "install":
-			if err := service.Install(); err != nil {
-				log.Fatalf("[ERROR] %v", err)
-			}
-			log.Println("[INFO] service created successfully.")
-			return
-
-		case "uninstall":
-			if err := service.Uninstall(); err != nil {
-				log.Fatalf("[ERROR] %v", err)
-			}
-			log.Println("[INFO] service removed successfully.")
-			return
-
-		case "start":
-			if err := service.Start(); err != nil {
-				log.Fatalf("[ERROR] %v", err)
-			}
-			log.Println("[INFO] service started.")
-			return
-
-		case "stop":
-			if err := service.Control(svc.Stop, svc.Stopped); err != nil {
-				log.Fatalf("[ERROR] %v", err)
-			}
-			log.Println("[INFO] service stopped")
-			return
-		default:
-			log.Fatalf("[ERROR] invalid argument: \"%s\".", *serviceFlag)
-		}
-	}*/
-
-	//m.Run()
-
 }
