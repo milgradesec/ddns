@@ -31,7 +31,7 @@ func main() {
 	flag.Parse()
 
 	if len(flag.Args()) > 0 {
-		log.Fatalf("[ERROR] extra command line arguments.")
+		log.Fatalf("extra command line arguments.")
 	}
 
 	if *versionFlag {
@@ -46,7 +46,7 @@ func main() {
 	if *updateFlag {
 		err := updater.Update(Version)
 		if err != nil {
-			log.Fatalf("[ERROR] update failed: %v.", err)
+			log.Errorf("update failed: %v.", err)
 		}
 		return
 	}
@@ -64,12 +64,12 @@ func main() {
 
 	svc, err := service.New(m, svcConfig)
 	if err != nil {
-		log.Fatalf("[ERROR] %v.", err)
+		log.Fatalf("%v.", err)
 	}
 
 	if *serviceFlag != "" {
 		if err := service.Control(svc, *serviceFlag); err != nil {
-			log.Fatalf("[ERROR] %v", err)
+			log.Fatalf("%v", err)
 		}
 
 		switch *serviceFlag {
@@ -90,6 +90,6 @@ func main() {
 	}
 
 	if err := svc.Run(); err != nil {
-		log.Fatalf("[ERROR] %v", err)
+		log.Fatalf("%v", err)
 	}
 }

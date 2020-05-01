@@ -7,6 +7,7 @@ import (
 	"errors"
 	"net/http"
 	"runtime"
+	"time"
 
 	log "github.com/sirupsen/logrus"
 
@@ -21,7 +22,11 @@ type updateInfo struct {
 }
 
 func checkForUpdateAndApply(version string) error {
-	resp, err := http.Get(baseURL + runtime.GOOS + "-" + runtime.GOARCH + ".json")
+	client := &http.Client{
+		Timeout: 15 * time.Second,
+	}
+
+	resp, err := client.Get(baseURL + runtime.GOOS + "-" + runtime.GOARCH + ".json")
 	if err != nil {
 		return err
 	}
@@ -45,9 +50,9 @@ func checkForUpdateAndApply(version string) error {
 		log.Println("DDNS is up to date.")
 		return nil
 	}
-	log.Printf("New version %s is available.\n", info.Version)
+	log.Printf("new version %s is available.\n", info.Version)
 
-	resp, err = http.Get(baseURL + info.Version + "/" + runtime.GOOS + "-" + runtime.GOARCH)
+	resp, err = client.Get(baseURL + info.Version + "/" + runtime.GOOS + "-" + runtime.GOARCH)
 	if err != nil {
 		return err
 	}
