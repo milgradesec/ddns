@@ -1,6 +1,8 @@
 # ddns
 
 [![Build Status](https://img.shields.io/travis/milgradesec/ddns/master.svg?label=build)](https://travis-ci.org/milgradesec/ddns)
+[![Go Report Card](https://goreportcard.com/badge/milgradesec/ddns)](https://goreportcard.com/badge/github.com/milgradesec/ddns)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/milgradesec/ddns/blob/master/LICENSE)
 
 ## Dynamic DNS for Cloudflare
 
