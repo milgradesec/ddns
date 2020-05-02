@@ -43,10 +43,17 @@ Configuration example:
 }
 ~~~
 
-Start `ddns` especifiying the configuration file
+Start `ddns` especifiying the configuration file:
 
 ~~~ cmd
 $ ddns -config config.json
+~~~
+
+Use `ddns` as a system service:
+
+~~~ cmd
+$ ddns -service install
+$ ddns -service start
 ~~~
 
 Update `ddns` to the latest version:
