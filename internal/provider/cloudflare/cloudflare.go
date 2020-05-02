@@ -8,7 +8,7 @@ import (
 
 	"github.com/cloudflare/cloudflare-go"
 	"github.com/milgradesec/ddns/internal/config"
-	"github.com/milgradesec/ddns/pkg/ip"
+	"github.com/milgradesec/ddns/internal/ip"
 )
 
 // API implements provider.API interface
