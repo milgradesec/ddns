@@ -13,14 +13,14 @@ import (
 
 // API implements provider.API interface
 type API struct {
-	cfg config.Config
+	cfg config.Configuration
 
 	api *cloudflare.API
 	id  string
 }
 
 // New creates a Cloudflare DNS provider
-func New(cfg config.Config) (*API, error) {
+func New(cfg config.Configuration) (*API, error) {
 	api, err := cloudflare.New(cfg.APIKey, cfg.Email)
 	if err != nil {
 		return nil, err

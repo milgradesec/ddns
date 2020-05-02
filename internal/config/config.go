@@ -2,11 +2,12 @@ package config
 
 import (
 	"encoding/json"
+	"errors"
 	"os"
 )
 
-// Config stores Provider configuration
-type Config struct {
+// Configuration stores Provider configuration
+type Configuration struct {
 	Provider string   `json:"provider"`
 	Zone     string   `json:"zone"`
 	Email    string   `json:"email"`
@@ -14,7 +15,8 @@ type Config struct {
 	Exclude  []string `json:"exclude"`
 }
 
-func (c Config) IsExcluded(s string) bool {
+// IsExcluded determines if a domain is excluded from changes
+func (c Configuration) IsExcluded(s string) bool {
 	for _, e := range c.Exclude {
 		if s == e {
 			return true
@@ -23,9 +25,22 @@ func (c Config) IsExcluded(s string) bool {
 	return false
 }
 
-// Load config from file
-func Load(file string) (Config, error) {
-	var cfg Config
+func (c Configuration) isValid() (bool, error) {
+	if c.Zone == "" {
+		return false, errors.New("zone is empty")
+	}
+	if c.Email == "" {
+		return false, errors.New("email is empty")
+	}
+	if c.APIKey == "" {
+		return false, errors.New("apiKey is empty")
+	}
+	return true, nil
+}
+
+// Load configuration from file
+func Load(file string) (Configuration, error) {
+	var cfg Configuration
 
 	f, err := os.Open(file)
 	if err != nil {
@@ -34,6 +49,11 @@ func Load(file string) (Config, error) {
 	defer f.Close()
 
 	err = json.NewDecoder(f).Decode(&cfg)
+	if err != nil {
+		return cfg, err
+	}
+
+	_, err = cfg.isValid()
 	if err != nil {
 		return cfg, err
 	}

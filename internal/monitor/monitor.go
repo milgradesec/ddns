@@ -22,7 +22,7 @@ const defaultInterval = 3 * time.Minute
 // SIGHUP signal
 type Monitor struct {
 	ConfigFile string
-	cfg        config.Config
+	cfg        config.Configuration
 	api        provider.API
 }
 
