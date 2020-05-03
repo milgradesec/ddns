@@ -39,7 +39,9 @@ func (m *Monitor) Start(s service.Service) error {
 	}
 	m.api = cfAPI
 
-	go m.Run()
+	go func() {
+		m.Run()
+	}()
 	return nil
 }
 

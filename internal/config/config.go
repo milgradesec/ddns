@@ -59,3 +59,7 @@ func Load(file string) (Configuration, error) {
 	}
 	return cfg, nil
 }
+
+func findConfigurationFile() string {
+	return ""
+}
