@@ -19,7 +19,6 @@ var (
 
 func main() {
 	fmt.Printf("DDNS-%s\n", Version)
-	fmt.Printf("%s/%s, %s, %s\n", runtime.GOOS, runtime.GOARCH, runtime.Version(), Version)
 
 	var (
 		versionFlag = flag.Bool("version", false, "Only version information.")
@@ -35,6 +34,7 @@ func main() {
 	}
 
 	if *versionFlag {
+		fmt.Printf("%s/%s, %s, %s\n", runtime.GOOS, runtime.GOARCH, runtime.Version(), Version)
 		return
 	}
 
