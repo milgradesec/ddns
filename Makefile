@@ -1,4 +1,4 @@
-VERSION:=$(shell git describe --tags --always --dirty="-dev" --abbrev=0)
+VERSION:=$(shell git describe --tags --always --abbrev=0 --dirty="-dev")
 BUILDFLAGS:=-v -ldflags="-s -w -X main.Version=$(VERSION)"
 IMPORT_PATH:=github.com/milgradesec/ddns
 DOCKER_PLATFORM:=linux/arm/v7
@@ -37,3 +37,4 @@ test:
 clean:
 	go clean
 	del ddns.exe
+	del ddns
