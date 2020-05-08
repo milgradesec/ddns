@@ -12,11 +12,6 @@ import (
 	"github.com/milgradesec/ddns/internal/updater"
 )
 
-var (
-	// Version set at build
-	Version string
-)
-
 func main() {
 	fmt.Printf("DDNS-%s\n", Version)
 
@@ -93,3 +88,8 @@ func main() {
 		log.Fatalf("%v", err)
 	}
 }
+
+var (
+	// Version set at build
+	Version string
+)
