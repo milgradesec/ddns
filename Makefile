@@ -26,3 +26,4 @@ test:
 .PHONY: clean
 clean:
 	go clean
+	del ddns.exe

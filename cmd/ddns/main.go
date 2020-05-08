@@ -74,17 +74,17 @@ func main() {
 
 		switch *serviceFlag {
 		case "install":
-			log.Println("[INFO] service created successfully.")
+			log.Infoln("service created successfully")
 		case "uninstall":
-			log.Println("[INFO] service removed successfully.")
+			log.Infoln("service removed successfully")
 		case "start":
-			log.Println("[INFO] service started.")
+			log.Infoln("service started")
 		case "stop":
-			log.Println("[INFO] service stopped.")
+			log.Infoln("service stopped")
 		case "restart":
-			log.Println("[INFO] service restarted.")
+			log.Infoln("service restarted")
 		default:
-			log.Fatalf("[ERROR] invalid argument: %s.", *serviceFlag)
+			log.Errorf("invalid argument: %s", *serviceFlag)
 		}
 		return
 	}

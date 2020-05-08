@@ -19,19 +19,21 @@ const defaultInterval = 3 * time.Minute
 
 // Monitor runs in a infinite loop and triggers provider zone updates
 // every 3 min interval, can be triggered at any time by sending a
-// SIGHUP signal
+// SIGHUP signal.
 type Monitor struct {
 	ConfigFile string
-	cfg        config.Configuration
-	api        provider.API
+
+	cfg config.Configuration
+	api provider.API
 }
 
-// Start implements service.Interface
+// Start implements the service.Interface.
 func (m *Monitor) Start(s service.Service) error {
 	cfg, err := config.Load(m.ConfigFile)
 	if err != nil {
 		return fmt.Errorf("failed to load configuration: %v", err)
 	}
+	m.cfg = cfg
 
 	cfAPI, err := cf.New(cfg)
 	if err != nil {
@@ -45,12 +47,12 @@ func (m *Monitor) Start(s service.Service) error {
 	return nil
 }
 
-// Stop implements service.Interface
+// Stop implements the service.Interface.
 func (m *Monitor) Stop(s service.Service) error {
 	return nil
 }
 
-// Run starts monitoring
+// Run starts the loop.
 func (m *Monitor) Run() {
 	ticker := time.NewTicker(defaultInterval)
 	sighup := make(chan os.Signal, 1)
@@ -65,7 +67,7 @@ func (m *Monitor) Run() {
 				m.callProvider()
 
 			case <-sighup:
-				log.Printf("[INFO] SIGHUP received: updating records for %s\n", m.cfg.Zone)
+				log.Infof("SIGHUP received: updating records for %s", m.cfg.Zone)
 				m.callProvider()
 			}
 		}
@@ -75,6 +77,6 @@ func (m *Monitor) Run() {
 
 func (m *Monitor) callProvider() {
 	if err := m.api.UpdateZone(); err != nil {
-		log.Printf("[ERROR] error updating zone %s: %v\n", m.cfg.Zone, err)
+		log.Errorf("error updating zone %s: %v", m.cfg.Zone, err)
 	}
 }

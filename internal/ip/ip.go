@@ -16,10 +16,10 @@ type jsonResponse struct {
 
 // GetIP returns the current public IP obtained from ipify.org
 func GetIP() (string, error) {
-	b := backoff.NewExponentialBackOff()
 	client := &http.Client{
 		Timeout: 15 * time.Second,
 	}
+	b := backoff.NewExponentialBackOff()
 
 	req, err := http.NewRequest(http.MethodGet, "https://api.ipify.org/?format=json", nil)
 	if err != nil {
