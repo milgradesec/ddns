@@ -21,7 +21,7 @@ func main() {
 	fmt.Printf("DDNS-%s\n", Version)
 
 	var (
-		versionFlag = flag.Bool("version", false, "Only version information.")
+		versionFlag = flag.Bool("version", false, "Show version information.")
 		updateFlag  = flag.Bool("update", false, "Updates DDNS binary to latest version available.")
 		serviceFlag = flag.String("service", "", "Manage DDNS as a system service")
 		configFlag  = flag.String("config", "config.json", "Set configuration file.")
