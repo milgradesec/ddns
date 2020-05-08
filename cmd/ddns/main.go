@@ -57,7 +57,7 @@ func main() {
 
 	svcConfig := &service.Config{
 		Name:        "ddns",
-		DisplayName: "Dynamic DNS service",
+		DisplayName: "ddns",
 		Description: "Dynamic DNS service",
 		Arguments:   []string{"-config", *configFlag},
 	}
