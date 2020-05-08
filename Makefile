@@ -1,6 +1,5 @@
-VERSION:=$(shell git describe --tags --always --dirty="-dev")
+VERSION:=$(shell git describe --tags --always --dirty="-dev" --abbrev=0)
 BUILDFLAGS:=-v -ldflags="-s -w -X main.Version=$(VERSION)"
-SYSTEM:=
 IMPORT_PATH:=github.com/milgradesec/ddns
 DOCKER_PLATFORM:=linux/arm/v7
 
@@ -9,15 +8,26 @@ all: build
 
 .PHONY: build
 build:
-	$(SYSTEM) go build $(BUILDFLAGS) $(IMPORT_PATH)/cmd/ddns
+	go build $(BUILDFLAGS) $(IMPORT_PATH)/cmd/ddns
 
 .PHONY: docker
+.ONESHELL:
 docker:
+	set CGO_ENABLED=0
+	set GOOS=linux
+	set GOARCH=amd64
+	go build $(BUILDFLAGS) $(IMPORT_PATH)/cmd/ddns
 	docker build . -t ddns:$(VERSION)
 
 .PHONY: release
+.ONESHELL:
 release:
-	docker buildx build --platform $(DOCKER_PLATFORM) --build-arg VERSION=$(VERSION) . -t milgradesec/ddns:latest -t milgradesec/ddns:$(VERSION) --push
+	set CGO_ENABLED=0
+	set GOOS=linux
+	set GOARCH=arm
+	set GOARM=7
+	go build $(BUILDFLAGS) $(IMPORT_PATH)/cmd/ddns
+	docker buildx build --platform $(DOCKER_PLATFORM) . -t milgradesec/ddns:latest -t milgradesec/ddns:$(VERSION) --push
 
 .PHONY: test
 test:
