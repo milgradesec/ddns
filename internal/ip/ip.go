@@ -3,6 +3,7 @@ package ip
 import (
 	"encoding/json"
 	"errors"
+	"net"
 	"net/http"
 	"strconv"
 	"time"
@@ -10,7 +11,7 @@ import (
 	"github.com/cenkalti/backoff"
 )
 
-type jsonResponse struct {
+type ipifyResponse struct {
 	IP string
 }
 
@@ -34,13 +35,18 @@ func GetIP() (string, error) {
 		}
 		defer resp.Body.Close()
 
-		var msg jsonResponse
+		if resp.StatusCode != http.StatusOK {
+			return "", errors.New("invalid status code from ipify.org: " + strconv.Itoa(resp.StatusCode))
+		}
+
+		var msg ipifyResponse
 		if err = json.NewDecoder(resp.Body).Decode(&msg); err != nil {
 			return "", err
 		}
 
-		if resp.StatusCode != 200 {
-			return "", errors.New("invalid status code from ipify: " + strconv.Itoa(resp.StatusCode))
+		ip := net.ParseIP(msg.IP)
+		if ip == nil {
+			return "", errors.New("invalid ip from ipify.org: " + msg.IP)
 		}
 		return msg.IP, nil
 	}
