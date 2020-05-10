@@ -46,7 +46,7 @@ func GetIP() (string, error) {
 
 		ip := net.ParseIP(msg.IP)
 		if ip == nil {
-			return "", errors.New("invalid ip from ipify.org: " + msg.IP)
+			return "", errors.New("failed to parse ip: " + msg.IP)
 		}
 		return msg.IP, nil
 	}
