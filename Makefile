@@ -33,6 +33,10 @@ release:
 test:
 	go test ./...
 
+.PHONY: lint
+lint:
+	golangci-lint run
+
 .PHONY: clean
 clean:
 	go clean

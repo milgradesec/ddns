@@ -16,7 +16,7 @@ type Configuration struct {
 }
 
 // IsExcluded determines if a domain is excluded from changes
-func (c Configuration) IsExcluded(s string) bool {
+func (c *Configuration) IsExcluded(s string) bool {
 	for _, e := range c.Exclude {
 		if s == e {
 			return true
@@ -25,7 +25,7 @@ func (c Configuration) IsExcluded(s string) bool {
 	return false
 }
 
-func (c Configuration) isValid() (bool, error) {
+func (c *Configuration) isValid() (bool, error) {
 	if c.Zone == "" {
 		return false, errors.New("zone is empty")
 	}
@@ -39,9 +39,7 @@ func (c Configuration) isValid() (bool, error) {
 }
 
 // Load configuration from file
-func Load(file string) (Configuration, error) {
-	var cfg Configuration
-
+func Load(file string) (cfg Configuration, err error) {
 	f, err := os.Open(file)
 	if err != nil {
 		return cfg, err

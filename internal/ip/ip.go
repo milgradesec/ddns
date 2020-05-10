@@ -40,7 +40,8 @@ func GetIP() (string, error) {
 		}
 
 		var msg ipifyResponse
-		if err = json.NewDecoder(resp.Body).Decode(&msg); err != nil {
+		err = json.NewDecoder(resp.Body).Decode(&msg)
+		if err != nil {
 			return "", err
 		}
 

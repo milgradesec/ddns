@@ -90,6 +90,5 @@ func main() {
 }
 
 var (
-	// Version set at build
 	Version string
 )

@@ -63,8 +63,7 @@ func (cf *API) UpdateZone() error {
 			continue
 		}
 
-		switch r.Type {
-		case "A":
+		if r.Type == "A" {
 			if r.Content != publicIP {
 				rr := cloudflare.DNSRecord{
 					Type:    r.Type,

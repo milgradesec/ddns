@@ -17,12 +17,12 @@ import (
 
 const baseURL = "https://dl.paesacybersecurity.eu/ddns/"
 
-var NotAvailableErr = errors.New("No update available")
+var ErrNotAvailable = errors.New("no update available")
 
 func Update(version string) error {
 	resp, err := checkForUpdate(version)
 	if err != nil {
-		if errors.Is(err, NotAvailableErr) {
+		if errors.Is(err, ErrNotAvailable) {
 			log.Println("no updates available")
 			return nil
 		}
@@ -71,7 +71,7 @@ func checkForUpdate(version string) (r Response, err error) {
 	}
 
 	if serverResp.Version == version {
-		return r, NotAvailableErr
+		return r, ErrNotAvailable
 	}
 
 	r.ReleaseVersion = serverResp.Version
@@ -93,6 +93,7 @@ func (r Response) Apply() error {
 	if err != nil {
 		return err
 	}
+	defer resp.Body.Close()
 
 	err = update.Apply(resp.Body, opts)
 	if err != nil {

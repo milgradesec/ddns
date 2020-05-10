@@ -1,12 +1,4 @@
 linters-settings:
-  depguard:
-    list-type: blacklist
-    packages:
-      # logging is allowed only by logutils.Log, logrus
-      # is allowed to use only in logutils package
-      - github.com/sirupsen/logrus
-    packages-with-error-message:
-      - github.com/sirupsen/logrus: "logging is allowed only by logutils.Log"
   dupl:
     threshold: 100
   funlen:
@@ -31,7 +23,7 @@ linters-settings:
   gocyclo:
     min-complexity: 15
   goimports:
-    local-prefixes: github.com/golangci/golangci-lint
+    local-prefixes: github.com/milgradesec/ddns
   golint:
     min-confidence: 0
   gomnd:
@@ -74,8 +66,8 @@ linters:
     - goconst
     - gocritic
     - gocyclo
-    - gofmt
-    - goimports
+#    - gofmt
+#    - goimports
     - golint
     - gomnd
     - goprintffuncname
