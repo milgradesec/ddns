@@ -23,13 +23,13 @@ const defaultInterval = 3 * time.Minute
 type Monitor struct {
 	ConfigFile string
 
-	cfg config.Configuration
+	cfg *config.Configuration
 	api provider.API
 }
 
 // Start implements the service.Interface.
 func (m *Monitor) Start(s service.Service) error {
-	cfg, err := config.Load(m.ConfigFile)
+	cfg, err := config.New(m.ConfigFile)
 	if err != nil {
 		return fmt.Errorf("failed to load configuration: %v", err)
 	}

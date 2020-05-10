@@ -38,8 +38,8 @@ func (c *Configuration) isValid() (bool, error) {
 	return true, nil
 }
 
-// Load configuration from file
-func Load(file string) (cfg Configuration, err error) {
+// New configuration from file
+func New(file string) (cfg *Configuration, err error) {
 	f, err := os.Open(file)
 	if err != nil {
 		return cfg, err
