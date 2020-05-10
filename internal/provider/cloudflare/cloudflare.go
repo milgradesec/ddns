@@ -58,7 +58,9 @@ func (cf *API) UpdateZone() error {
 		return errors.New("cloudflare api error: failed to list dns records")
 	}
 
-	for _, r := range records {
+	for i := range records {
+		r := records[i]
+
 		if cf.cfg.IsExcluded(r.Name) {
 			continue
 		}
