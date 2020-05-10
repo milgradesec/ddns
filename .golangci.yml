@@ -1,3 +1,5 @@
+# golangci.com configuration
+# https://github.com/golangci/golangci/wiki/Configuration
 linters-settings:
   dupl:
     threshold: 100
@@ -66,8 +68,8 @@ linters:
     - goconst
     - gocritic
     - gocyclo
-#    - gofmt
-#    - goimports
+    #    - gofmt
+    #    - goimports
     - golint
     - gomnd
     - goprintffuncname
@@ -118,10 +120,3 @@ run:
     - internal/cache
     - internal/renameio
     - internal/robustio
-
-# golangci.com configuration
-# https://github.com/golangci/golangci/wiki/Configuration
-service:
-  golangci-lint-version: 1.23.x # use the fixed version to not introduce new linters unexpectedly
-  prepare:
-    - echo "here I can run custom commands, but no preparation needed for this repo"
