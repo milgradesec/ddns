@@ -13,17 +13,17 @@
 ### Build from Source
 
 ~~~ cmd
-$ git clone github.com/milgradesec/ddns
-$ cd ddns
-$ make
+git clone github.com/milgradesec/ddns
+cd ddns
+make
 ~~~
 
 ### Build with Docker
 
 ~~~ cmd
-$ git clone github.com/milgradesec/ddns
-$ cd ddns
-$ make docker
+git clone github.com/milgradesec/ddns
+cd ddns
+make docker
 ~~~
 
 ## How to Use
@@ -46,18 +46,18 @@ Configuration example:
 Start `ddns` especifiying the configuration file:
 
 ~~~ cmd
-$ ddns -config config.json
+ddns -config config.json
 ~~~
 
 Use `ddns` as a system service:
 
 ~~~ cmd
-$ ddns -service install
-$ ddns -service start
+ddns -service install
+ddns -service start
 ~~~
 
 Update `ddns` to the latest version:
 
 ~~~ cmd
-$ ddns -update
+ddns -update
 ~~~
