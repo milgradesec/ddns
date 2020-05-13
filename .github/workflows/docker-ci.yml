@@ -21,7 +21,7 @@ jobs:
         id: go
 
       - name: Build
-        run: make build
+        run: go build -v
 
       - name: Build the Docker image
         run: docker build . --file Dockerfile --tag ddns:$(date +%s)
