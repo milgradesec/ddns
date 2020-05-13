@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build
-        run: go build
+        run: cd ddns && make build
 
       - name: Build the Docker image
         run: docker build . --file Dockerfile --tag ddns:$(date +%s)
