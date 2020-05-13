@@ -9,7 +9,7 @@ on:
 jobs:
 
   build:
-
+    name: Build
     runs-on: ubuntu-latest
 
     steps:
@@ -20,7 +20,7 @@ jobs:
       id: go
       
     - name: Build
-      run: make build
+      run: go build -v github.com/milgradesec/ddns/cmd/ddns
       
     - uses: actions/checkout@v2
     - name: Build the Docker image
