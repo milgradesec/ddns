@@ -2,26 +2,27 @@ name: Docker CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
-
   build:
     name: Build
     runs-on: ubuntu-latest
 
     steps:
-    - name: Set up Go
-      uses: actions/setup-go@v2
-      with:
-        go-version: 1.14
-      id: go
-      
-    - name: Build
-      run: go build
-      
-    - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag ddns:$(date +%s)
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.14
+        id: go
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build
+        run: go build
+
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag ddns:$(date +%s)
