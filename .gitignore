@@ -1,0 +1,17 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*bin
+*.test
+*.out
+*.old
+ddns
+
+# Config
+realconfig.json
+
+# Goreleaser
+/dist

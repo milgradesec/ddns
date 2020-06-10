@@ -1,0 +1,44 @@
+before:
+  hooks:
+    - go clean
+    - go mod download
+
+builds:
+  - id: ddns
+    main: .\cmd\ddns\main.go
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - -v
+    ldflags:
+      - -s -w -X main.Version={{.Tag}}
+
+    # https://golang.org/doc/install/source#environment
+    goos:
+      - linux
+      - windows
+
+    # https://golang.org/doc/install/source#environment
+    goarch:
+      - amd64
+      - arm64
+
+    ignore:
+      - goos: windows
+        goarch: arm64
+
+archives:
+  - replacements:
+      linux: linux
+      windows: windows
+      amd64: x86_64
+    name_template: "{{ .ProjectName }}-{{ .Os }}-{{ .Arch }}-{{ .Version }}"
+    wrap_in_directory: true
+    format: zip
+
+checksum:
+  name_template: "checksums.txt"
+  algorithm: sha256
+
+changelog:
+  skip: true
