@@ -5,7 +5,7 @@ before:
 
 builds:
   - id: ddns
-    main: .\cmd\ddns\main.go
+    main: ./cmd/ddns/main.go
     env:
       - CGO_ENABLED=0
     flags:
