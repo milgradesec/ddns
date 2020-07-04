@@ -27,7 +27,7 @@ type Monitor struct {
 	api provider.API
 }
 
-// Start implements the service.Interface.
+// Start implements the service.Service interface.
 func (m *Monitor) Start(s service.Service) error {
 	cfg, err := config.New(m.ConfigFile)
 	if err != nil {
@@ -47,12 +47,7 @@ func (m *Monitor) Start(s service.Service) error {
 	return nil
 }
 
-// Stop implements the service.Interface.
-func (m *Monitor) Stop(s service.Service) error {
-	return nil
-}
-
-// Run starts the loop.
+// Run implements the service.Service interface.
 func (m *Monitor) Run() {
 	ticker := time.NewTicker(defaultInterval)
 	sighup := make(chan os.Signal, 1)
@@ -79,4 +74,9 @@ func (m *Monitor) callProvider() {
 	if err := m.api.UpdateZone(); err != nil {
 		log.Errorf("error updating zone %s: %v", m.cfg.Zone, err)
 	}
+}
+
+// Stop implements the service.Service interface.
+func (m *Monitor) Stop(s service.Service) error {
+	return nil
 }
