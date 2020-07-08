@@ -21,7 +21,7 @@ builds:
     # https://golang.org/doc/install/source#environment
     goarch:
       - amd64
-      - arm64
+      - arm
 
     ignore:
       - goos: windows
