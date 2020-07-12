@@ -20,8 +20,8 @@ docker:
 .PHONY: release
 .ONESHELL:
 release:
-	CGO_ENABLED=$(CGO_ENABLED) GOOS=linux GOARCH=arm GOARM=7 go build $(BUILDFLAGS) $(IMPORT_PATH)/cmd/ddns
-	docker.exe buildx build --platform linux/arm/v7 . -t milgradesec/ddns:latest -t milgradesec/ddns:$(VERSION) --push
+	CGO_ENABLED=$(CGO_ENABLED) GOOS=linux GOARCH=arm64 go build $(BUILDFLAGS) $(IMPORT_PATH)/cmd/ddns
+	docker.exe buildx build --platform linux/arm64 . -t milgradesec/ddns:latest -t milgradesec/ddns:$(VERSION) --push
 
 .PHONY: clean
 clean:
