@@ -3,7 +3,7 @@ FROM golang:1.14.4
 WORKDIR /go/src/app
 COPY . .
 
-RUN CGO_ENABLED=0 go build -v -ldflags="-s -w -X main.Version=DEV" github.com/milgradesec/ddns/cmd/ddns
+RUN make build
 
 FROM alpine:3.12
 
