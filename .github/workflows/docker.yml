@@ -1,0 +1,22 @@
+name: Docker
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install buildx
+        id: buildx
+        uses: crazy-max/ghaction-docker-buildx@v3
+        with:
+          buildx-version: latest
+          qemu-version: latest
+
+      - name: Build and Push
+        run: docker buildx build -f exp.Dockerfile --platform linux/amd64,linux/arm64 . --tag milgradesec/ddns:latest
