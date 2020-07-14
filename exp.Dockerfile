@@ -1,6 +1,8 @@
 FROM golang:1.14.4
 
 WORKDIR /go/src/app
+COPY . .
+
 RUN make build
 
 FROM alpine:3.12
