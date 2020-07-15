@@ -2,6 +2,7 @@
 
 ![CI](https://github.com/milgradesec/ddns/workflows/CI/badge.svg)
 ![Docker](https://github.com/milgradesec/ddns/workflows/Docker/badge.svg)
+[![codecov](https://codecov.io/gh/milgradesec/list-manager/branch/master/graph/badge.svg)](https://codecov.io/gh/milgradesec/list-manager)
 [![Go Report Card](https://goreportcard.com/badge/milgradesec/ddns)](https://goreportcard.com/badge/github.com/milgradesec/ddns)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/milgradesec/ddns/blob/master/LICENSE)
 
