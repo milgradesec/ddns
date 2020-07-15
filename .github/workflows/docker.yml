@@ -19,4 +19,4 @@ jobs:
           qemu-version: latest
 
       - name: Build and Push
-        run: docker buildx build -f exp.Dockerfile --platform linux/amd64,linux/arm64 . --tag milgradesec/ddns:latest
+        run: docker buildx build -f build.Dockerfile --platform linux/amd64,linux/arm64 . --tag milgradesec/ddns:latest
