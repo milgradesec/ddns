@@ -2,7 +2,8 @@ name: Docker
 
 on:
   push:
-    branches: [master]
+    tags:
+      - v*
 
 jobs:
   build:
@@ -18,5 +19,8 @@ jobs:
           buildx-version: latest
           qemu-version: latest
 
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
       - name: Build and Push
-        run: docker buildx build -f build.Dockerfile --platform linux/amd64,linux/arm64 . --tag milgradesec/ddns:latest
+        run: docker buildx build -f build.Dockerfile --platform linux/arm64 . --tag milgradesec/ddns:${{ github.ref }} --tag milgradesec/ddns:latest --push
