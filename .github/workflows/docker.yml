@@ -23,4 +23,4 @@ jobs:
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Build and Push
-        run: docker buildx build -f build.Dockerfile --platform linux/arm64 . --tag milgradesec/ddns:${{ github.ref }} --tag milgradesec/ddns:latest --push
+        run: docker buildx build -f build.Dockerfile --platform linux/arm64 . --tag milgradesec/ddns:${{GITHUB_REF##*/}} --tag milgradesec/ddns:latest --push
