@@ -21,11 +21,11 @@ builds:
     # https://golang.org/doc/install/source#environment
     goarch:
       - amd64
-      - arm
+      - arm64
 
     ignore:
       - goos: windows
-        goarch: arm64
+        goarch: arm
 
 archives:
   - replacements:
