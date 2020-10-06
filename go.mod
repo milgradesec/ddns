@@ -7,5 +7,4 @@ require (
 	github.com/cloudflare/cloudflare-go v0.13.3
 	github.com/kardianos/service v1.1.0
 	github.com/sirupsen/logrus v1.7.0
-	github.com/urfave/cli v1.22.4 // indirect
 )
