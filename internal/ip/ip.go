@@ -11,7 +11,7 @@ import (
 	"github.com/cenkalti/backoff"
 )
 
-type ipifyResponse struct {
+type response struct {
 	IP string
 }
 
@@ -39,7 +39,7 @@ func GetIP() (string, error) {
 			return "", errors.New("invalid status code from ipify.org: " + strconv.Itoa(resp.StatusCode))
 		}
 
-		var msg ipifyResponse
+		var msg response
 		err = json.NewDecoder(resp.Body).Decode(&msg)
 		if err != nil {
 			return "", err
