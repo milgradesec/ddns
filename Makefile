@@ -11,18 +11,6 @@ all: build
 build:
 	CGO_ENABLED=$(CGO_ENABLED) $(SYSTEM) go build $(BUILDFLAGS) $(IMPORT_PATH)/cmd/ddns
 
-.PHONY: docker
-.ONESHELL:
-docker:
-	CGO_ENABLED=$(CGO_ENABLED) GOOS=linux GOARCH=amd64 go build $(BUILDFLAGS) $(IMPORT_PATH)/cmd/ddns
-	docker.exe build . -t ddns:$(VERSION)
-
-.PHONY: release
-.ONESHELL:
-release:
-	CGO_ENABLED=$(CGO_ENABLED) GOOS=linux GOARCH=arm64 go build $(BUILDFLAGS) $(IMPORT_PATH)/cmd/ddns
-	docker.exe buildx build --platform linux/arm64 . -t milgradesec/ddns:latest -t milgradesec/ddns:$(VERSION) --push
-
 .PHONY: clean
 clean:
 	go clean
