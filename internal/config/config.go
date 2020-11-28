@@ -12,8 +12,16 @@ type Configuration struct {
 	Zone     string   `json:"zone"`
 	Email    string   `json:"email"`
 	APIKey   string   `json:"apikey"`
+	APIToken string   `json:"apitoken"`
 	Exclude  []string `json:"exclude"`
 }
+
+type APIAuthType int
+
+const (
+	APIToken APIAuthType = iota
+	APIKey
+)
 
 // IsExcluded determines if a domain is excluded from changes.
 func (c *Configuration) IsExcluded(s string) bool {
@@ -32,10 +40,17 @@ func (c *Configuration) isValid() (bool, error) {
 	if c.Email == "" {
 		return false, errors.New("email is empty")
 	}
-	if c.APIKey == "" {
-		return false, errors.New("apiKey is empty")
+	if c.APIKey == "" && c.APIToken == "" {
+		return false, errors.New("apiKey and apiToken are empty")
 	}
 	return true, nil
+}
+
+func (c *Configuration) GetAuthType() APIAuthType {
+	if c.APIKey == "" {
+		return APIToken
+	}
+	return APIKey
 }
 
 // New configuration from file.

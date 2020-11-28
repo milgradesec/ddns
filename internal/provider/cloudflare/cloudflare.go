@@ -21,7 +21,29 @@ type API struct {
 
 // New creates a Cloudflare DNS provider.
 func New(cfg *config.Configuration) (*API, error) {
+	if cfg.GetAuthType() == config.APIKey {
+		return newWithAPIKey(cfg)
+	}
+	return newWithAPIToken(cfg)
+}
+
+// Creates a Clouflare Provider using API Key.
+func newWithAPIKey(cfg *config.Configuration) (*API, error) {
 	api, err := cloudflare.New(cfg.APIKey, cfg.Email)
+	if err != nil {
+		return nil, err
+	}
+
+	cf := &API{
+		api: api,
+		cfg: cfg,
+	}
+	return cf, nil
+}
+
+// Creates a Cloudflare Provider using API Token.
+func newWithAPIToken(cfg *config.Configuration) (*API, error) {
+	api, err := cloudflare.NewWithAPIToken(cfg.APIToken)
 	if err != nil {
 		return nil, err
 	}
