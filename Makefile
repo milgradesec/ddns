@@ -7,10 +7,6 @@ CGO_ENABLED:=0
 .PHONY: all
 all: build
 
-.PHONY: build
-build:
-	CGO_ENABLED=$(CGO_ENABLED) $(SYSTEM) go build $(BUILDFLAGS) $(IMPORT_PATH)/cmd/ddns
-
 .PHONY: clean
 clean:
 	go clean
@@ -22,3 +18,7 @@ test:
 .PHONY: lint
 lint:
 	golangci-lint run
+
+.PHONY: build
+build:
+	CGO_ENABLED=$(CGO_ENABLED) $(SYSTEM) go build $(BUILDFLAGS) $(IMPORT_PATH)/cmd/ddns
