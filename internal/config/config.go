@@ -3,7 +3,9 @@ package config
 import (
 	"encoding/json"
 	"errors"
+	"io/ioutil"
 	"os"
+	"strings"
 )
 
 // Configuration stores Provider configuration.
@@ -33,6 +35,38 @@ func (c *Configuration) IsExcluded(s string) bool {
 	return false
 }
 
+// LoadFromEnv reads the API Key or Token from environment variables.
+func (c *Configuration) LoadFromEnv() error {
+	key, found := os.LookupEnv("CLOUDFLARE_API_KEY")
+	if found {
+		c.APIKey = key
+	}
+
+	token, found := os.LookupEnv("CLOUDFLARE_API_TOKEN")
+	if found {
+		c.APIToken = token
+	}
+
+	keyFile, found := os.LookupEnv("CLOUDFLARE_API_KEY_FILE")
+	if found {
+		buf, err := ioutil.ReadFile("/run/secrets/" + keyFile)
+		if err != nil {
+			return err
+		}
+		c.APIKey = strings.TrimSpace(string(buf))
+	}
+
+	tokenFile, found := os.LookupEnv("CLOUDFLARE_API_TOKEN_FILE")
+	if found {
+		buf, err := ioutil.ReadFile("/run/secrets/" + tokenFile)
+		if err != nil {
+			return err
+		}
+		c.APIToken = strings.TrimSpace(string(buf))
+	}
+	return nil
+}
+
 func (c *Configuration) isValid() (bool, error) {
 	if c.Zone == "" {
 		return false, errors.New("zone is empty")
@@ -57,18 +91,25 @@ func (c *Configuration) GetAuthType() APIAuthType {
 func New(file string) (cfg *Configuration, err error) {
 	f, err := os.Open(file)
 	if err != nil {
-		return cfg, err
+		return nil, err
 	}
 	defer f.Close()
 
 	err = json.NewDecoder(f).Decode(&cfg)
 	if err != nil {
-		return cfg, err
+		return nil, err
+	}
+
+	if cfg.APIKey == "" && cfg.APIToken == "" {
+		err = cfg.LoadFromEnv()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	_, err = cfg.isValid()
 	if err != nil {
-		return cfg, err
+		return nil, err
 	}
 	return cfg, nil
 }
