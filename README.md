@@ -20,8 +20,42 @@ Configuration example:
   "zone": "domain.com",
   "email": "email@domain.com",
   "apikey": "difiowehfhsahsdshndjqwh",
+  "apitoken": "fjsdfjsdhfjashfjkahfkh",
   "exclude": ["example1.domain.com"]
 }
+```
+
+Docker Compose example:
+
+```yaml
+version: "3.8"
+
+configs:
+  config.json:
+    file: config.json
+
+services:
+  ddns:
+    image: milgradesec/ddns:latest
+    configs:
+      - source: config.json
+        target: /config.json
+    secrets:
+      - api_token
+    environment:
+      # Set the API Token/Key in env
+      - CLOUDFLARE_API_TOKEN=eiuwfhwehfiweafwe
+      # Or use a docker secret
+      - CLOUDFLARE_API_TOKEN_FILE=api_token
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 5
+
+secrets:
+  api_token:
+    file: API_TOKEN
 ```
 
 Start `ddns` especifiying the configuration file:
