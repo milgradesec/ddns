@@ -15,7 +15,7 @@ import (
 	cf "github.com/milgradesec/ddns/internal/provider/cloudflare"
 )
 
-const defaultInterval = 3 * time.Minute
+const defaultInterval = 5 * time.Minute
 
 // Monitor runs in a infinite loop and triggers provider zone updates
 // every 3 min interval, can be triggered at any time by sending a
@@ -49,7 +49,14 @@ func (m *Monitor) Start(s service.Service) error {
 
 // Run implements the service.Service interface.
 func (m *Monitor) Run() {
-	ticker := time.NewTicker(defaultInterval)
+	var interval time.Duration
+	if m.cfg.Interval != 0 {
+		interval = time.Duration(m.cfg.Interval) * time.Minute
+	} else {
+		interval = defaultInterval
+	}
+
+	ticker := time.NewTicker(interval)
 	sighup := make(chan os.Signal, 1)
 	signal.Notify(sighup, syscall.SIGHUP)
 

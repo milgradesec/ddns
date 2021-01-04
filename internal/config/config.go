@@ -16,6 +16,7 @@ type Configuration struct {
 	APIKey   string   `json:"apikey"`
 	APIToken string   `json:"apitoken"`
 	Exclude  []string `json:"exclude"`
+	Interval int      `json:"interval"`
 }
 
 type APIAuthType int
