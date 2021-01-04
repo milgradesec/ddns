@@ -1,19 +1,19 @@
-version: "3.8"
+version: "3.7"
 
 configs:
-  config.json:
-    file: config.json
+  ddns_config.json:
+    external: true
 
 services:
   ddns:
     image: milgradesec/ddns:latest
     configs:
-      - source: config.json
+      - source: ddns_config.json
         target: /config.json
     secrets:
-      - api_token
+      - ddns_api_token
     environment:
-      - CLOUDFLARE_API_TOKEN_FILE=api_token
+      - CLOUDFLARE_API_TOKEN_FILE=ddns_api_token
     deploy:
       restart_policy:
         condition: on-failure
@@ -21,5 +21,5 @@ services:
         max_attempts: 5
 
 secrets:
-  api_token:
-    file: API_TOKEN
+  ddns_api_token:
+    external: true
