@@ -45,9 +45,9 @@ services:
       - api_token
     environment:
       # Set the API Token/Key in env
-      - CLOUDFLARE_API_TOKEN=eiuwfhwehfiweafwe
+      - CLOUDFLARE_API_TOKEN=API_TOKEN
       # Or use a docker secret
-      - CLOUDFLARE_API_TOKEN_FILE=api_token
+      - CLOUDFLARE_API_TOKEN_FILE=/run/secrets/api_token
     deploy:
       restart_policy:
         condition: on-failure
