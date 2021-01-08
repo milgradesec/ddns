@@ -11,6 +11,10 @@ import (
 	"github.com/cenkalti/backoff"
 )
 
+type response struct {
+	IP string
+}
+
 // GetIP returns the current public IP obtained from ipify.org.
 func GetIP() (string, error) {
 	client := &http.Client{
@@ -35,17 +39,17 @@ func GetIP() (string, error) {
 			return "", errors.New("invalid status code from ipify.org: " + strconv.Itoa(resp.StatusCode))
 		}
 
-		var content string
-		err = json.NewDecoder(resp.Body).Decode(&content)
+		var msg response
+		err = json.NewDecoder(resp.Body).Decode(&msg)
 		if err != nil {
 			return "", err
 		}
 
-		ip := net.ParseIP(content)
+		ip := net.ParseIP(msg.IP)
 		if ip == nil {
-			return "", errors.New("failed to parse ip: " + content)
+			return "", errors.New("failed to parse ip: " + msg.IP)
 		}
-		return content, nil
+		return msg.IP, nil
 	}
 	return "", errors.New("failed to reach ipify")
 }
