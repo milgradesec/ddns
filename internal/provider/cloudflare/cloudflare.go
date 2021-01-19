@@ -1,16 +1,14 @@
 package cloudflare
 
 import (
-	"crypto/tls"
 	"errors"
 	"fmt"
-	"net/http"
-	"time"
 
 	log "github.com/sirupsen/logrus"
 
 	"github.com/cloudflare/cloudflare-go"
 	"github.com/milgradesec/ddns/internal/config"
+	httpc "github.com/milgradesec/ddns/pkg/http"
 	"github.com/milgradesec/ddns/pkg/ip"
 )
 
@@ -30,28 +28,9 @@ func New(cfg *config.Configuration) (*API, error) {
 	return newWithAPIToken(cfg)
 }
 
-func newHttpClient() *http.Client {
-	return &http.Client{
-		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{
-				MinVersion: tls.VersionTLS12,
-				CipherSuites: []uint16{
-					tls.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
-					tls.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
-					tls.TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
-					tls.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
-					tls.TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,
-					tls.TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,
-				},
-			},
-		},
-		Timeout: 15 * time.Second,
-	}
-}
-
 // Creates a Clouflare Provider using API Key.
 func newWithAPIKey(cfg *config.Configuration) (*API, error) {
-	api, err := cloudflare.New(cfg.APIKey, cfg.Email, cloudflare.HTTPClient(newHttpClient()))
+	api, err := cloudflare.New(cfg.APIKey, cfg.Email, cloudflare.HTTPClient(httpc.NewHTTPClient()))
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +44,7 @@ func newWithAPIKey(cfg *config.Configuration) (*API, error) {
 
 // Creates a Cloudflare Provider using API Token.
 func newWithAPIToken(cfg *config.Configuration) (*API, error) {
-	api, err := cloudflare.NewWithAPIToken(cfg.APIToken, cloudflare.HTTPClient(newHttpClient()))
+	api, err := cloudflare.NewWithAPIToken(cfg.APIToken, cloudflare.HTTPClient(httpc.NewHTTPClient()))
 	if err != nil {
 		return nil, err
 	}
