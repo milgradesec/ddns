@@ -23,7 +23,6 @@ func GetIP() (string, error) {
 			TLSClientConfig: &tls.Config{
 				MinVersion: tls.VersionTLS12,
 			},
-			IdleConnTimeout: 30 * time.Second,
 		},
 		Timeout: 15 * time.Second,
 	}
