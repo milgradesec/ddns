@@ -1,6 +1,7 @@
 package ip
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"net"
@@ -18,6 +19,12 @@ type response struct {
 // GetIP returns the current public IP obtained from ipify.org.
 func GetIP() (string, error) {
 	client := &http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{
+				MinVersion: tls.VersionTLS12,
+			},
+			IdleConnTimeout: 30 * time.Second,
+		},
 		Timeout: 15 * time.Second,
 	}
 	b := backoff.NewExponentialBackOff()
