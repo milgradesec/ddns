@@ -14,7 +14,6 @@ linters:
     - gocritic
     - gocyclo
     - golint
-    - gomnd
     - goprintffuncname
     - gosec
     - gosimple
@@ -40,6 +39,10 @@ linters:
     - godox
     - prealloc
     - maligned
+    - makezero
+    - wrapcheck
+    - sqlclosecheck
+    - predeclared
 
 run:
   skip-dirs:
