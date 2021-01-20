@@ -2,6 +2,7 @@ package http
 
 import (
 	"crypto/tls"
+	"net"
 	"net/http"
 	"time"
 )
@@ -11,6 +12,11 @@ import (
 func NewHTTPClient() *http.Client {
 	return &http.Client{
 		Transport: &http.Transport{
+			Dial: (&net.Dialer{
+				Timeout:   30 * time.Second,
+				KeepAlive: 30 * time.Second,
+			}).Dial,
+
 			TLSClientConfig: &tls.Config{
 				MinVersion: tls.VersionTLS12,
 				CipherSuites: []uint16{
@@ -22,6 +28,7 @@ func NewHTTPClient() *http.Client {
 					tls.TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,
 				},
 			},
+			TLSHandshakeTimeout: 10 * time.Second,
 		},
 		Timeout: 15 * time.Second,
 	}
