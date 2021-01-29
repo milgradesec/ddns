@@ -4,6 +4,7 @@
 ![Docker](https://github.com/milgradesec/ddns/workflows/Docker/badge.svg)
 [![codecov](https://codecov.io/gh/milgradesec/ddns/branch/master/graph/badge.svg)](https://codecov.io/gh/milgradesec/ddns)
 [![Go Report Card](https://goreportcard.com/badge/milgradesec/ddns)](https://goreportcard.com/badge/github.com/milgradesec/ddns)
+[![Go Reference](https://pkg.go.dev/badge/github.com/milgradesec/ddns.svg)](https://pkg.go.dev/github.com/milgradesec/ddns)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/milgradesec/ddns/blob/master/LICENSE)
 
 ## Dynamic DNS for Cloudflare
