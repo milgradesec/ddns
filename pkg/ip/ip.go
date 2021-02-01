@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/cenkalti/backoff"
-	httpc "github.com/milgradesec/ddns/pkg/http"
+	httpc "github.com/milgradesec/golibs/http"
 )
 
 type response struct {
