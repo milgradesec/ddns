@@ -3,6 +3,7 @@ package ip
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net"
 	"net/http"
 	"strconv"
@@ -23,7 +24,7 @@ func GetIP() (string, error) {
 
 	req, err := http.NewRequest(http.MethodGet, "https://api.ipify.org/?format=json", nil)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("NewRequest to '%s' failed: %w", req.URL.String(), err)
 	}
 
 	for i := 0; i < 5; i++ {
@@ -41,7 +42,7 @@ func GetIP() (string, error) {
 		var msg response
 		err = json.NewDecoder(resp.Body).Decode(&msg)
 		if err != nil {
-			return "", err
+			return "", fmt.Errorf("failed to decode ipify response: %w", err)
 		}
 
 		ip := net.ParseIP(msg.IP)
