@@ -31,13 +31,13 @@ type Monitor struct {
 func (m *Monitor) Start(s service.Service) error {
 	cfg, err := config.New(m.ConfigFile)
 	if err != nil {
-		return fmt.Errorf("failed to load configuration: %v", err)
+		return fmt.Errorf("failed to load configuration: %w", err)
 	}
 	m.cfg = cfg
 
 	cfAPI, err := cf.New(cfg)
 	if err != nil {
-		return fmt.Errorf("error creating Cloudflare API client: %v", err)
+		return fmt.Errorf("error creating Cloudflare API client: %w", err)
 	}
 	m.api = cfAPI
 

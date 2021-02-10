@@ -97,7 +97,7 @@ func (cf *API) UpdateZone() error {
 					Proxied: r.Proxied,
 				}
 				if err := cf.api.UpdateDNSRecord(cf.id, r.ID, rr); err != nil {
-					return fmt.Errorf("error updating %s: %v", r.Name, err)
+					return fmt.Errorf("error updating %s: %w", r.Name, err)
 				}
 				log.Infof("updated %s from %s to %s", r.Name, r.Content, publicIP)
 			}
