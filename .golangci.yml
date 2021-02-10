@@ -44,7 +44,6 @@ linters:
     - sqlclosecheck
     - predeclared
     - errorlint
-    - goerr113
 
 run:
   skip-dirs:
