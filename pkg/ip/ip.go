@@ -27,9 +27,11 @@ func GetIP() (string, error) {
 		return "", err
 	}
 
+	var lastError error
 	for i := 0; i < 5; i++ {
 		resp, err := client.Do(req)
 		if err != nil {
+			lastError = err
 			time.Sleep(b.NextBackOff())
 			continue
 		}
@@ -51,5 +53,5 @@ func GetIP() (string, error) {
 		}
 		return msg.IP, nil
 	}
-	return "", errors.New("failed to reach ipify")
+	return "", fmt.Errorf("failed to reach ipify: %w", lastError)
 }
