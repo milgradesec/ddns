@@ -4,12 +4,12 @@ import (
 	"errors"
 	"fmt"
 
-	log "github.com/sirupsen/logrus"
-
 	"github.com/cloudflare/cloudflare-go"
 	"github.com/milgradesec/ddns/internal/config"
 	"github.com/milgradesec/ddns/pkg/ip"
+
 	httpc "github.com/milgradesec/golibs/http"
+	log "github.com/sirupsen/logrus"
 )
 
 // API implements provider.API interface.
