@@ -1,7 +1,6 @@
 package cloudflare
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/cloudflare/cloudflare-go"
@@ -66,7 +65,7 @@ func (cf *API) UpdateZone() error {
 	if cf.id == "" {
 		id, err := cf.api.ZoneIDByName(cf.cfg.Zone)
 		if err != nil {
-			return errors.New("cloudflare api error: failed to retrieve zone id")
+			return fmt.Errorf("cloudflare api error: failed to retrieve zone id: %w", err)
 		}
 		cf.id = id
 	}
@@ -78,7 +77,7 @@ func (cf *API) UpdateZone() error {
 
 	records, err := cf.api.DNSRecords(cf.id, cloudflare.DNSRecord{})
 	if err != nil {
-		return errors.New("cloudflare api error: failed to list dns records")
+		return fmt.Errorf("cloudflare api error: failed to list dns records: %w", err)
 	}
 
 	for i := range records {
