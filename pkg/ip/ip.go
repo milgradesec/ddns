@@ -44,14 +44,14 @@ func GetIP() (string, error) {
 		var msg response
 		err = json.NewDecoder(resp.Body).Decode(&msg)
 		if err != nil {
-			return "", fmt.Errorf("failed to decode response: %w", err)
+			return "", fmt.Errorf("failed to decode JSON-encoded response: %w", err)
 		}
 
 		ip := net.ParseIP(msg.IP)
 		if ip == nil {
-			return "", errors.New("failed to parse ip: " + msg.IP)
+			return "", errors.New("invalid ip: " + msg.IP)
 		}
 		return msg.IP, nil
 	}
-	return "", fmt.Errorf("failed to reach ipify: %w", lastError)
+	return "", fmt.Errorf("failed to reach ipify.org: %w", lastError)
 }
