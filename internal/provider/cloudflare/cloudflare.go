@@ -15,8 +15,8 @@ import (
 type API struct {
 	cfg *config.Configuration
 
-	api *cloudflare.API
-	id  string
+	cf *cloudflare.API
+	id string
 }
 
 // New creates a Cloudflare DNS provider.
@@ -35,7 +35,7 @@ func newWithAPIKey(cfg *config.Configuration) (*API, error) {
 	}
 
 	cf := &API{
-		api: api,
+		cf:  api,
 		cfg: cfg,
 	}
 	return cf, nil
@@ -49,25 +49,25 @@ func newWithAPIToken(cfg *config.Configuration) (*API, error) {
 	}
 
 	cf := &API{
-		api: api,
+		cf:  api,
 		cfg: cfg,
 	}
 	return cf, nil
 }
 
 // Name implements the provider.API interface.
-func (cf *API) Name() string {
+func (api *API) Name() string {
 	return "Cloudflare"
 }
 
 // UpdateZone implements the provider.API interface.
-func (cf *API) UpdateZone() error {
-	if cf.id == "" {
-		id, err := cf.api.ZoneIDByName(cf.cfg.Zone)
+func (api *API) UpdateZone() error {
+	if api.id == "" {
+		id, err := api.cf.ZoneIDByName(api.cfg.Zone)
 		if err != nil {
 			return fmt.Errorf("cloudflare api error: failed to retrieve zone id: %w", err)
 		}
-		cf.id = id
+		api.id = id
 	}
 
 	publicIP, err := ip.GetIP()
@@ -75,7 +75,7 @@ func (cf *API) UpdateZone() error {
 		return err
 	}
 
-	records, err := cf.api.DNSRecords(cf.id, cloudflare.DNSRecord{})
+	records, err := api.cf.DNSRecords(api.id, cloudflare.DNSRecord{})
 	if err != nil {
 		return fmt.Errorf("cloudflare api error: failed to list dns records: %w", err)
 	}
@@ -83,7 +83,7 @@ func (cf *API) UpdateZone() error {
 	for i := range records {
 		r := records[i]
 
-		if cf.cfg.IsExcluded(r.Name) {
+		if api.cfg.IsExcluded(r.Name) {
 			continue
 		}
 
@@ -95,7 +95,7 @@ func (cf *API) UpdateZone() error {
 					Content: publicIP,
 					Proxied: r.Proxied,
 				}
-				if err := cf.api.UpdateDNSRecord(cf.id, r.ID, rr); err != nil {
+				if err := api.cf.UpdateDNSRecord(api.id, r.ID, rr); err != nil {
 					return fmt.Errorf("error updating %s: %w", r.Name, err)
 				}
 				log.Infof("updated %s from %s to %s", r.Name, r.Content, publicIP)
