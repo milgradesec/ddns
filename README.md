@@ -11,7 +11,7 @@
 
 `ddns` is a dynamic DNS client for domains managed by Cloudflare.
 
-## How to Use
+## Usage
 
 Configuration example:
 
