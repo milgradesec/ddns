@@ -5,10 +5,9 @@ import (
 	"fmt"
 	"runtime"
 
-	log "github.com/sirupsen/logrus"
-
 	"github.com/kardianos/service"
 	"github.com/milgradesec/ddns/internal/monitor"
+	log "github.com/sirupsen/logrus"
 )
 
 func main() {
