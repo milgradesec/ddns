@@ -76,7 +76,7 @@ func (c *Configuration) isValid() (bool, error) {
 		return false, errors.New("email is empty")
 	}
 	if c.APIKey == "" && c.APIToken == "" {
-		return false, errors.New("apiKey and apiToken are empty")
+		return false, errors.New("no APIKey or APIToken provided")
 	}
 	return true, nil
 }
