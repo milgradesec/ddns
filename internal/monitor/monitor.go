@@ -34,6 +34,7 @@ func (m *Monitor) Start(s service.Service) error {
 		return fmt.Errorf("failed to load configuration: %w", err)
 	}
 	m.cfg = cfg
+	log.Infof("Configuration loaded from file: %s", m.ConfigFile)
 
 	cfAPI, err := cf.New(cfg)
 	if err != nil {
