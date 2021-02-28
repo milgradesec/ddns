@@ -12,14 +12,18 @@ import (
 
 func main() {
 	var (
+		versionFlag = flag.Bool("version", false, "Show version information.")
 		serviceFlag = flag.String("service", "", "Manage DDNS as a system service")
 		configFlag  = flag.String("config", "config.json", "Set configuration file.")
 		helpFlag    = flag.Bool("help", false, "Show help.")
 	)
 	flag.Parse()
 
-	fmt.Println("DDNS-" + Version)
-	fmt.Printf("%s/%s, %s, %s\n", runtime.GOOS, runtime.GOARCH, runtime.Version(), Version)
+	if *versionFlag {
+		fmt.Println("DDNS-" + Version)
+		fmt.Printf("%s/%s, %s, %s\n", runtime.GOOS, runtime.GOARCH, runtime.Version(), Version)
+		return
+	}
 
 	if *helpFlag {
 		flag.PrintDefaults()
