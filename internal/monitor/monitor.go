@@ -1,6 +1,7 @@
 package monitor
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"os/signal"
@@ -15,7 +16,10 @@ import (
 	cf "github.com/milgradesec/ddns/internal/provider/cloudflare"
 )
 
-const defaultInterval = 5 * time.Minute
+const (
+	defaultInterval = 5 * time.Minute
+	defaultTimeout  = 30 * time.Second
+)
 
 // Monitor runs in a infinite loop and triggers provider zone updates
 // every 3 min interval, can be triggered at any time by sending a
@@ -24,7 +28,7 @@ type Monitor struct {
 	ConfigFile string
 
 	cfg *config.Configuration
-	api provider.API
+	api provider.DNSProvider
 }
 
 // Start implements the service.Service interface.
@@ -79,7 +83,10 @@ func (m *Monitor) Run() {
 }
 
 func (m *Monitor) callProvider() {
-	if err := m.api.UpdateZone(); err != nil {
+	ctx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
+	defer cancel()
+
+	if err := m.api.UpdateZone(ctx); err != nil {
 		log.Errorf("error updating zone %s: %v", m.cfg.Zone, err)
 	}
 }

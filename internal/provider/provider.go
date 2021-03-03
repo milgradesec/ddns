@@ -1,8 +1,10 @@
 package provider
 
-// API interface represents an API from a dns provider
+import "context"
+
+// DNSProvider interface represents an DNSProvider from a dns provider
 // able to query and modify records for a domain.
-type API interface {
+type DNSProvider interface {
 	Name() string
-	UpdateZone() error
+	UpdateZone(ctx context.Context) error
 }
