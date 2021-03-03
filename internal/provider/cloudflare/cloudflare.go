@@ -1,6 +1,7 @@
 package cloudflare
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/cloudflare/cloudflare-go"
@@ -75,7 +76,7 @@ func (api *API) UpdateZone() error {
 		return err
 	}
 
-	records, err := api.cf.DNSRecords(api.id, cloudflare.DNSRecord{})
+	records, err := api.cf.DNSRecords(context.TODO(), api.id, cloudflare.DNSRecord{})
 	if err != nil {
 		return fmt.Errorf("cloudflare api error: failed to list dns records: %w", err)
 	}
@@ -95,7 +96,7 @@ func (api *API) UpdateZone() error {
 					Content: publicIP,
 					Proxied: r.Proxied,
 				}
-				if err := api.cf.UpdateDNSRecord(api.id, r.ID, rr); err != nil {
+				if err := api.cf.UpdateDNSRecord(context.TODO(), api.id, r.ID, rr); err != nil {
 					return fmt.Errorf("error updating %s: %w", r.Name, err)
 				}
 				log.Infof("updated %s from %s to %s", r.Name, r.Content, publicIP)
