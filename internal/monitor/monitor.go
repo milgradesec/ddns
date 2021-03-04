@@ -18,7 +18,6 @@ import (
 
 const (
 	defaultInterval = 5 * time.Minute
-	defaultTimeout  = 30 * time.Second
 )
 
 // Monitor runs in a infinite loop and triggers provider zone updates
@@ -83,10 +82,7 @@ func (m *Monitor) Run() {
 }
 
 func (m *Monitor) callProvider() {
-	ctx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
-	defer cancel()
-
-	if err := m.api.UpdateZone(ctx); err != nil {
+	if err := m.api.UpdateZone(context.Background()); err != nil {
 		log.Errorf("error updating zone %s: %v", m.cfg.Zone, err)
 	}
 }
