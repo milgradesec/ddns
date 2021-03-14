@@ -50,7 +50,7 @@ func (c *Configuration) LoadFromEnv() error {
 
 	keyFile, found := os.LookupEnv("CLOUDFLARE_API_KEY_FILE")
 	if found {
-		buf, err := ioutil.ReadFile("/run/secrets/" + keyFile)
+		buf, err := ioutil.ReadFile(keyFile)
 		if err != nil {
 			return err
 		}
@@ -59,7 +59,7 @@ func (c *Configuration) LoadFromEnv() error {
 
 	tokenFile, found := os.LookupEnv("CLOUDFLARE_API_TOKEN_FILE")
 	if found {
-		buf, err := ioutil.ReadFile("/run/secrets/" + tokenFile)
+		buf, err := ioutil.ReadFile(tokenFile)
 		if err != nil {
 			return err
 		}
