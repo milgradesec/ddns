@@ -1,9 +1,13 @@
 FROM golang:1.16.2
 
+ARG TARGETPLATFORM
+ARG TARGETOS
+ARG TARGETARCH
+
 WORKDIR /go/src/app
 COPY . .
 
-RUN make build
+RUN make build SYSTEM="GOOS=${TARGETOS} GOARCH=${TARGETARCH}"
 
 FROM alpine:3.13
 
