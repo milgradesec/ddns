@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.8"
 
 configs:
   ddns_config.json:
@@ -13,7 +13,7 @@ services:
     secrets:
       - ddns_api_token
     environment:
-      - CLOUDFLARE_API_TOKEN_FILE=ddns_api_token
+      - CLOUDFLARE_API_TOKEN_FILE=/run/secrets/ddns_api_token
     deploy:
       restart_policy:
         condition: on-failure
