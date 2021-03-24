@@ -8,7 +8,7 @@ import (
 	"github.com/milgradesec/ddns/internal/config"
 	"github.com/milgradesec/ddns/pkg/ip"
 
-	httpc "github.com/milgradesec/golibs/http"
+	httpc "github.com/milgradesec/go-libs/http"
 	log "github.com/sirupsen/logrus"
 )
 

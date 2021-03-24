@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/cenkalti/backoff"
-	httpc "github.com/milgradesec/golibs/http"
+	httpc "github.com/milgradesec/go-libs/http"
 )
 
 type response struct {
