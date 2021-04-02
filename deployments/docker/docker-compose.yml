@@ -1,14 +1,14 @@
 version: "3.8"
 
 configs:
-  ddns_config.json:
-    external: true
+  config.json:
+    file: config.json
 
 services:
   ddns:
     image: milgradesec/ddns:latest
     configs:
-      - source: ddns_config.json
+      - source: config.json
         target: /config.json
     secrets:
       - ddns_api_token
