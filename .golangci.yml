@@ -14,18 +14,17 @@ linters:
     - gocritic
     - gocyclo
     - golint
+    - gomnd
     - goprintffuncname
     - gosec
     - gosimple
     - govet
     - ineffassign
-    - interfacer
     - lll
     - misspell
     - nakedret
     - nolintlint
     - rowserrcheck
-    - scopelint
     - staticcheck
     - structcheck
     - stylecheck
@@ -38,12 +37,8 @@ linters:
     - godot
     - godox
     - prealloc
-    - maligned
-    - makezero
-    - sqlclosecheck
-    - predeclared
-    - errorlint
+    - exportloopref
 
 run:
   skip-dirs:
-    - test
+    - testdata
