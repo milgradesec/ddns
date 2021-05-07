@@ -53,7 +53,7 @@ services:
       - CLOUDFLARE_API_TOKEN_FILE=/run/secrets/api_token
     deploy:
       restart_policy:
-        condition: on-failure
+        condition: any
         delay: 5s
         max_attempts: 5
 
