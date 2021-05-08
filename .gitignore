@@ -9,9 +9,6 @@
 *.old
 ddns
 
-### VS Code ###
-.vscode/
-
 ### Config ###
 realconfig.json
 
