@@ -53,6 +53,9 @@ linters:
     - predeclared
     - sqlclosecheck
     - wastedassign
+    - forcetypeassert
+    - gci
+    - goheader
 
 run:
   skip-dirs:
