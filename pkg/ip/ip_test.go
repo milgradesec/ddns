@@ -5,8 +5,7 @@ import (
 )
 
 func TestGetIP(t *testing.T) {
-	_, err := GetIP()
-	if err != nil {
+	if _, err := GetIP(); err != nil {
 		t.Error(err)
 	}
 }
