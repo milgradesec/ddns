@@ -1,6 +1,7 @@
 package ip
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -22,7 +23,7 @@ func GetIP() (string, error) {
 	client := httpc.NewHTTPClient()
 	b := backoff.NewExponentialBackOff()
 
-	req, err := http.NewRequest(http.MethodGet, "https://api.ipify.org/?format=json", nil)
+	req, err := http.NewRequestWithContext(context.TODO(), http.MethodGet, "https://api.ipify.org/?format=json", nil)
 	if err != nil {
 		return "", err
 	}
