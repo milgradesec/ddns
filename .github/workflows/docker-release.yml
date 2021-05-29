@@ -19,14 +19,14 @@ jobs:
       - name: Docker Setup Buildx
         uses: docker/setup-buildx-action@v1
 
-      - name: Login to Docker Hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+      - name: Login to Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Build and Push
         run: |
-          docker buildx build -f build.Dockerfile --platform linux/amd64 . --tag milgradesec/ddns:amd64 --push
-          docker buildx build -f build.Dockerfile --platform linux/arm64 . --tag milgradesec/ddns:arm64 --push
-          docker manifest create milgradesec/ddns:$TAG milgradesec/ddns:arm64 milgradesec/ddns:amd64
-          docker manifest create milgradesec/ddns:latest milgradesec/ddns:arm64 milgradesec/ddns:amd64
-          docker manifest push --purge milgradesec/ddns:$TAG
-          docker manifest push --purge milgradesec/ddns:latest
+          docker buildx build -f build.Dockerfile --platform linux/amd64 . --tag ghcr.io/milgradesec/ddns:amd64 --push
+          docker buildx build -f build.Dockerfile --platform linux/arm64 . --tag ghcr.io/milgradesec/ddns:arm64 --push
+          docker manifest create ghcr.io/milgradesec/ddns:$TAG ghcr.io/milgradesec/ddns:arm64 ghcr.io/milgradesec/ddns:amd64
+          docker manifest create ghcr.io/milgradesec/ddns:latest ghcr.io/milgradesec/ddns:arm64 ghcr.io/milgradesec/ddns:amd64
+          docker manifest push --purge ghcr.io/milgradesec/ddns:$TAG
+          docker manifest push --purge ghcr.io/milgradesec/ddns:latest
