@@ -9,7 +9,7 @@ COPY . .
 
 RUN make build SYSTEM="GOOS=${TARGETOS} GOARCH=${TARGETARCH}"
 
-FROM alpine:3.13
+FROM alpine:3.14.0
 
 RUN apk update && apk add --no-cache ca-certificates 
 
