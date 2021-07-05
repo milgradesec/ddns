@@ -19,11 +19,11 @@ type response struct {
 }
 
 // GetIP returns the current public IP obtained from ipify.org.
-func GetIP() (string, error) {
+func GetIP(ctx context.Context) (string, error) {
 	client := httpc.NewHTTPClient()
 	b := backoff.NewExponentialBackOff()
 
-	req, err := http.NewRequestWithContext(context.TODO(), http.MethodGet, "https://api.ipify.org/?format=json", nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, "https://api.ipify.org/?format=json", nil)
 	if err != nil {
 		return "", err
 	}
