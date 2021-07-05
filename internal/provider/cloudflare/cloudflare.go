@@ -3,6 +3,7 @@ package cloudflare
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/cloudflare/cloudflare-go"
 	"github.com/milgradesec/ddns/internal/config"
@@ -71,7 +72,7 @@ func (api *API) UpdateZone(ctx context.Context) error {
 		api.id = id
 	}
 
-	publicIP, err := ip.GetIP()
+	publicIP, err := ip.GetIP(ctx)
 	if err != nil {
 		return err
 	}
@@ -96,6 +97,10 @@ func (api *API) UpdateZone(ctx context.Context) error {
 					Content: publicIP,
 					Proxied: r.Proxied,
 				}
+
+				ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
+				defer cancel()
+
 				if err := api.cf.UpdateDNSRecord(ctx, api.id, r.ID, rr); err != nil {
 					return fmt.Errorf("error updating %s: %w", r.Name, err)
 				}
