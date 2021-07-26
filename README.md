@@ -40,7 +40,7 @@ configs:
 
 services:
   ddns:
-    image: milgradesec/ddns:latest
+    image: ghcr.io/milgradesec/ddns:latest
     configs:
       - source: config.json
         target: /config.json
@@ -53,7 +53,6 @@ services:
       - CLOUDFLARE_API_TOKEN_FILE=/run/secrets/api_token
     deploy:
       restart_policy:
-        condition: any
         delay: 5s
         max_attempts: 5
 
