@@ -38,27 +38,26 @@ configs:
   config.json:
     file: config.json
 
+secrets:
+  api_token:
+    file: API_TOKEN
+
 services:
   ddns:
     image: ghcr.io/milgradesec/ddns:latest
     configs:
       - source: config.json
         target: /config.json
-    secrets:
-      - api_token
     environment:
       # Set the API Token/Key in env
       - CLOUDFLARE_API_TOKEN=API_TOKEN
       # Or use a docker secret
       - CLOUDFLARE_API_TOKEN_FILE=/run/secrets/api_token
+    secrets:
+      - api_token
     deploy:
       restart_policy:
         delay: 5s
-        max_attempts: 5
-
-secrets:
-  api_token:
-    file: API_TOKEN
 ```
 
 Start `ddns` especifiying the configuration file:
