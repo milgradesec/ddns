@@ -4,21 +4,20 @@ configs:
   config.json:
     file: config.json
 
+secrets:
+  ddns_api_token:
+    external: true
+
 services:
   ddns:
     image: ghcr.io/milgradesec/ddns:latest
     configs:
       - source: config.json
         target: /config.json
-    secrets:
-      - ddns_api_token
     environment:
       - CLOUDFLARE_API_TOKEN_FILE=/run/secrets/ddns_api_token
+    secrets:
+      - ddns_api_token
     deploy:
       restart_policy:
         delay: 5s
-        max_attempts: 5
-
-secrets:
-  ddns_api_token:
-    external: true
