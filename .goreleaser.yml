@@ -35,16 +35,16 @@ dockers:
     dockerfile: build.Dockerfile
     use: buildx
     build_flag_templates:
-      - "--platform linux/amd64"
-      - "--tag ghcr.io/milgradesec/{{ .ProjectName }}:amd64"
+      - "--platform=linux/amd64"
+      - "--tag=ghcr.io/milgradesec/{{ .ProjectName }}:amd64"
 
   - image_templates:
       - "ghcr.io/milgradesec/{{ .ProjectName }}:arm64"
     dockerfile: build.Dockerfile
     use: buildx
     build_flag_templates:
-      - "--platform linux/arm64"
-      - "--tag ghcr.io/milgradesec/{{ .ProjectName }}:arm64"
+      - "--platform=linux/arm64"
+      - "--tag=ghcr.io/milgradesec/{{ .ProjectName }}:arm64"
 
 docker_manifests:
   - name_template: ghcr.io/milgradesec/{{ .ProjectName }}:{{ .Tag }}
