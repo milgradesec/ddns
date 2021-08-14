@@ -12,35 +12,42 @@ builds:
       - -v
     ldflags:
       - -s -w -X main.Version={{.Tag}}
-
-    # https://golang.org/doc/install/source#environment
     goos:
       - linux
       - windows
-
-    # https://golang.org/doc/install/source#environment
     goarch:
       - amd64
-      - 386
       - arm64
-      - arm
-
-    ignore:
-      - goos: windows
-        goarch: arm
+      - 386
 
 archives:
-  - replacements:
-      linux: linux
-      windows: windows
+  - name_template: "{{ .ProjectName }}-{{ .Os }}-{{ .Arch }}-{{ .Version }}"
+    format: binary
+    replacements:
       amd64: x86_64
-    name_template: "{{ .ProjectName }}-{{ .Os }}-{{ .Arch }}-{{ .Version }}"
-    wrap_in_directory: true
-    format: zip
-
-checksum:
-  name_template: "checksums.txt"
-  algorithm: sha256
 
 changelog:
   skip: true
+
+dockers:
+  - image_templates:
+      - "ghcr.io/milgradesec/{{ .ProjectName }}:amd64"
+    dockerfile: build.Dockerfile
+    use: buildx
+    build_flag_templates:
+      - "--platform linux/amd64"
+      - "--tag ghcr.io/milgradesec/{{ .ProjectName }}:amd64"
+
+  - image_templates:
+      - "ghcr.io/milgradesec/{{ .ProjectName }}:arm64"
+    dockerfile: build.Dockerfile
+    use: buildx
+    build_flag_templates:
+      - "--platform linux/arm64"
+      - "--tag ghcr.io/milgradesec/{{ .ProjectName }}:arm64"
+
+docker_manifests:
+  - name_template: ghcr.io/milgradesec/{{ .ProjectName }}:{{ .Tag }}
+    image_templates:
+      - ghcr.io/milgradesec/{{ .ProjectName }}:amd64
+      - ghcr.io/milgradesec/{{ .ProjectName }}:arm64
