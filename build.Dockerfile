@@ -11,7 +11,9 @@ RUN make build SYSTEM="GOOS=${TARGETOS} GOARCH=${TARGETARCH}"
 
 FROM alpine:3.14.1
 
-RUN apk update && apk add --no-cache ca-certificates 
+RUN apk --update --no-cache add ca-certificates \
+    && addgroup -g 1000 ddns \
+    && adduser -u 1000 -G ddns -s /sbin/nologin -D ddns
 
 FROM scratch
 
