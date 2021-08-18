@@ -1,11 +1,19 @@
 module github.com/milgradesec/ddns
 
-go 1.16
+go 1.17
 
 require (
 	github.com/cenkalti/backoff v2.2.1+incompatible
 	github.com/cloudflare/cloudflare-go v0.20.0
 	github.com/kardianos/service v1.2.0
-	github.com/milgradesec/go-libs v0.0.0-20210810141754-4f43c86936ad
+	github.com/milgradesec/go-libs v0.0.0-20210817025837-3893b8cbfe4a
 	github.com/sirupsen/logrus v1.8.1
+)
+
+require (
+	github.com/pkg/errors v0.9.1 // indirect
+	golang.org/x/net v0.0.0-20210813160813-60bc85c4be6d // indirect
+	golang.org/x/sys v0.0.0-20210817190340-bfb29a6856f2 // indirect
+	golang.org/x/text v0.3.7 // indirect
+	golang.org/x/time v0.0.0-20210723032227-1f47c861a9ac // indirect
 )
