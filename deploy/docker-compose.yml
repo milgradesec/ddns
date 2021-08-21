@@ -10,7 +10,7 @@ secrets:
 
 services:
   ddns:
-    image: ghcr.io/milgradesec/ddns:latest
+    image: ghcr.io/milgradesec/ddns:${TAG:-latest}
     configs:
       - source: config.json
         target: /config.json
