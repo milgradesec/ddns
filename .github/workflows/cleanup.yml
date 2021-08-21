@@ -1,4 +1,5 @@
 name: Cleanup Worflow Runs
+
 on:
   schedule:
     - cron: "0 0 1 * *"
