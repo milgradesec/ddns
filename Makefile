@@ -30,7 +30,11 @@ release:
 		--platform linux/arm64 \
 		--tag ghcr.io/milgradesec/ddns:arm64 \
 		--push
-	docker manifest create ghcr.io/milgradesec/ddns:$(VERSION) ghcr.io/milgradesec/ddns:arm64 ghcr.io/milgradesec/ddns:amd64
-	docker manifest create ghcr.io/milgradesec/ddns:latest ghcr.io/milgradesec/ddns:arm64 ghcr.io/milgradesec/ddns:amd64
-	docker manifest push --purge ghcr.io/milgradesec/ddns:latest
+	docker manifest create ghcr.io/milgradesec/ddns:$(VERSION) \
+		ghcr.io/milgradesec/ddns:arm64 \
+		ghcr.io/milgradesec/ddns:amd64
+	docker manifest create ghcr.io/milgradesec/ddns:latest \
+		ghcr.io/milgradesec/ddns:arm64 \
+		ghcr.io/milgradesec/ddns:amd64
 	docker manifest push --purge ghcr.io/milgradesec/ddns:$(VERSION)
+	docker manifest push --purge ghcr.io/milgradesec/ddns:latest
