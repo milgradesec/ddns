@@ -2,6 +2,12 @@ name: Cleanup old workflow runs
 on:
   schedule:
     - cron: "0 0 1 * *"
+  workflow_dispatch:
+    inputs:
+      days:
+        description: "Number of days."
+        required: true
+        default: 30
 
 jobs:
   cleanup:
