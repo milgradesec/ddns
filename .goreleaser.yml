@@ -1,7 +1,6 @@
 before:
   hooks:
-    - go clean
-    - go mod download
+    - go mod tidy
 
 builds:
   - id: ddns
