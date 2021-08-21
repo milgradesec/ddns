@@ -1,10 +1,11 @@
-name: Delete old workflow runs
+name: Cleanup old workflow runs
 on:
   schedule:
     - cron: "0 0 1 * *"
 
 jobs:
   cleanup:
+    name: Cleanup workflow runs
     runs-on: ubuntu-latest
 
     steps:
