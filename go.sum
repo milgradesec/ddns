@@ -13,8 +13,8 @@ github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORN
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
 github.com/kr/text v0.1.0/go.mod h1:4Jbv+DJW3UT/LiOwJeYQe1efqtUx/iVham/4vfdArNI=
 github.com/mattn/go-runewidth v0.0.9/go.mod h1:H031xJmbD/WCDINGzjvQ9THkh0rPKHF+m2gUSrubnMI=
-github.com/milgradesec/go-libs v0.0.0-20210817025837-3893b8cbfe4a h1:9R2DhTE9/OGgwVpEJhzGJgHY9e4OvGsLKx/wo7S4ZlQ=
-github.com/milgradesec/go-libs v0.0.0-20210817025837-3893b8cbfe4a/go.mod h1:HJ40un7Pyc0ufZvHYbUMZr6hG2k3aPrxIcY4S9KGfX0=
+github.com/milgradesec/go-libs v0.0.0-20210818021116-d4de0881ccfe h1:0pcD+H2cTsEn1uS1x/IQ93aWzcjCvKE69Ct3nlZ/Jps=
+github.com/milgradesec/go-libs v0.0.0-20210818021116-d4de0881ccfe/go.mod h1:A6oJlLiKIyuj0k4Q8bwgMEpLntenS2e6j+kR3hC/5Wk=
 github.com/olekukonko/tablewriter v0.0.5/go.mod h1:hPp6KlRPjbx+hW8ykQs1w3UBbZlj6HuIJcUGPhkA7kY=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
