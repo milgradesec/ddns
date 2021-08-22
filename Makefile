@@ -1,8 +1,8 @@
-VERSION:=$(shell git describe --tags --always --abbrev=0)
-SYSTEM:=
-BUILDFLAGS:=-v -ldflags="-s -w -X main.Version=$(VERSION)"
-IMPORT_PATH:=github.com/milgradesec/ddns
-CGO_ENABLED:=0
+VERSION     :=$(shell git describe --tags --always --abbrev=0)
+SYSTEM      :=
+BUILDFLAGS  :=-v -ldflags="-s -w -X main.Version=$(VERSION)"
+IMPORT_PATH :=github.com/milgradesec/ddns
+CGO_ENABLED :=0
 
 all: build
 
