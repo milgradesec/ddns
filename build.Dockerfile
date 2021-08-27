@@ -9,7 +9,7 @@ COPY . .
 
 RUN make build SYSTEM="GOOS=${TARGETOS} GOARCH=${TARGETARCH}"
 
-FROM alpine:3.14.1
+FROM alpine:3.14.2
 
 RUN apk --update --no-cache add ca-certificates \
     && addgroup -g 1000 ddns \
