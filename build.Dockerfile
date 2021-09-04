@@ -11,13 +11,15 @@ RUN make build SYSTEM="GOOS=${TARGETOS} GOARCH=${TARGETARCH}"
 
 FROM alpine:3.14.2
 
-RUN apk --update --no-cache add ca-certificates \
-    && addgroup -g 1000 ddns \
-    && adduser -u 1000 -G ddns -s /sbin/nologin -D ddns
+RUN apk --update --no-cache add ca-certificates && \
+    addgroup -S ddns && \
+    adduser -S -G ddns ddns
 
 FROM scratch
 
 COPY --from=0 /go/src/app/ddns /ddns
 COPY --from=1 /etc/ssl/certs /etc/ssl/certs
+COPY --from=1 /etc/passwd /etc/passwd
 
+USER ddns
 ENTRYPOINT ["/ddns"]
