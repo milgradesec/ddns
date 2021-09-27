@@ -3,9 +3,7 @@ package config
 import (
 	"encoding/json"
 	"errors"
-	"io/ioutil"
 	"os"
-	"strings"
 )
 
 // Configuration stores Provider configuration.
@@ -19,13 +17,6 @@ type Configuration struct {
 	Interval int      `json:"interval"`
 }
 
-type APIAuthType int
-
-const (
-	APIToken APIAuthType = iota
-	APIKey
-)
-
 // IsExcluded determines if a domain is excluded from changes.
 func (c *Configuration) IsExcluded(s string) bool {
 	for _, e := range c.Exclude {
@@ -36,56 +27,15 @@ func (c *Configuration) IsExcluded(s string) bool {
 	return false
 }
 
-// LoadFromEnv reads the API Key or Token from environment variables.
+// LoadFromEnv reads configuration from environment variables.
 func (c *Configuration) LoadFromEnv() error {
-	key, found := os.LookupEnv("CLOUDFLARE_API_KEY")
-	if found {
-		c.APIKey = key
+	provider, found := os.LookupEnv("DDNS_PROVIDER")
+	if !found {
+		return errors.New("no provider is configured")
 	}
+	c.Provider = provider
 
-	token, found := os.LookupEnv("CLOUDFLARE_API_TOKEN")
-	if found {
-		c.APIToken = token
-	}
-
-	keyFile, found := os.LookupEnv("CLOUDFLARE_API_KEY_FILE")
-	if found {
-		buf, err := ioutil.ReadFile(keyFile)
-		if err != nil {
-			return err
-		}
-		c.APIKey = strings.TrimSpace(string(buf))
-	}
-
-	tokenFile, found := os.LookupEnv("CLOUDFLARE_API_TOKEN_FILE")
-	if found {
-		buf, err := ioutil.ReadFile(tokenFile)
-		if err != nil {
-			return err
-		}
-		c.APIToken = strings.TrimSpace(string(buf))
-	}
 	return nil
-}
-
-func (c *Configuration) isValid() (bool, error) {
-	if c.Zone == "" {
-		return false, errors.New("zone is empty")
-	}
-	if c.Email == "" {
-		return false, errors.New("email is empty")
-	}
-	if c.APIKey == "" && c.APIToken == "" {
-		return false, errors.New("no APIKey or APIToken provided")
-	}
-	return true, nil
-}
-
-func (c *Configuration) GetAuthType() APIAuthType {
-	if c.APIKey == "" {
-		return APIToken
-	}
-	return APIKey
 }
 
 // New configuration from file.
@@ -97,18 +47,6 @@ func New(file string) (cfg *Configuration, err error) {
 	defer f.Close()
 
 	err = json.NewDecoder(f).Decode(&cfg)
-	if err != nil {
-		return nil, err
-	}
-
-	if cfg.APIKey == "" && cfg.APIToken == "" {
-		err = cfg.LoadFromEnv()
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	_, err = cfg.isValid()
 	if err != nil {
 		return nil, err
 	}

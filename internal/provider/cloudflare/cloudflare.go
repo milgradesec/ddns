@@ -2,7 +2,11 @@ package cloudflare
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"io/ioutil"
+	"os"
+	"strings"
 	"time"
 
 	"github.com/cloudflare/cloudflare-go"
@@ -15,46 +19,95 @@ import (
 
 // API implements provider.API interface.
 type API struct {
-	cfg *config.Configuration
-
-	cf *cloudflare.API
-	id string
+	Zone   string
+	Email  string
+	zoneID string
+	Key    string
+	Token  string
+	cf     *cloudflare.API
+	cfg    *config.Configuration
 }
 
 // New creates a Cloudflare DNS provider.
-func New(cfg *config.Configuration) (*API, error) {
-	if cfg.GetAuthType() == config.APIKey {
-		return newWithAPIKey(cfg)
+func New(cfg *config.Configuration) (*API, error) { //nolint
+	var (
+		zone     string
+		email    string
+		apiKey   string
+		apiToken string
+	)
+
+	zone, found := os.LookupEnv("CLOUDFLARE_ZONE")
+	if !found {
+		return nil, errors.New("cloudflare zone not set")
 	}
-	return newWithAPIToken(cfg)
+
+	email, found = os.LookupEnv("CLOUDFLARE_MAIL") // not needed for token
+	if !found {
+		return nil, errors.New("cloudflare mail not set")
+	}
+
+	apiKey, found = os.LookupEnv("CLOUDFLARE_API_KEY")
+	if !found {
+		keyFile, found := os.LookupEnv("CLOUDFLARE_API_KEY_FILE")
+		if found {
+			buf, err := ioutil.ReadFile(keyFile)
+			if err != nil {
+				return nil, err
+			}
+			apiKey = strings.TrimSpace(string(buf))
+		}
+	}
+
+	if apiKey != "" {
+		cfAPI, err := newWithAPIKey(apiKey, email)
+		if err != nil {
+			return nil, err
+		}
+
+		return &API{
+			Zone:  zone,
+			Email: email,
+			Key:   apiKey,
+			cf:    cfAPI,
+		}, nil
+	}
+
+	apiToken, found = os.LookupEnv("CLOUDFLARE_API_TOKEN")
+	if !found {
+		tokenFile, found := os.LookupEnv("CLOUDFLARE_API_TOKEN_FILE")
+		if found {
+			buf, err := ioutil.ReadFile(tokenFile)
+			if err != nil {
+				return nil, err
+			}
+			apiToken = strings.TrimSpace(string(buf))
+		}
+	}
+
+	if apiToken != "" {
+		cfAPI, err := newWithAPIToken(apiToken)
+		if err != nil {
+			return nil, err
+		}
+
+		return &API{
+			Zone:  zone,
+			Email: email,
+			Token: apiKey,
+			cf:    cfAPI,
+		}, nil
+	}
+
+	return nil, errors.New("no Cloudflare API credentials found")
 }
 
-// Creates a Clouflare Provider using API Key.
-func newWithAPIKey(cfg *config.Configuration) (*API, error) {
-	api, err := cloudflare.New(cfg.APIKey, cfg.Email, cloudflare.HTTPClient(httpc.NewHTTPClient()))
-	if err != nil {
-		return nil, err
-	}
-
-	cf := &API{
-		cf:  api,
-		cfg: cfg,
-	}
-	return cf, nil
+func newWithAPIKey(key string, email string) (*cloudflare.API, error) {
+	return cloudflare.New(key, email, cloudflare.HTTPClient(httpc.NewHTTPClient()))
 }
 
-// Creates a Cloudflare Provider using API Token.
-func newWithAPIToken(cfg *config.Configuration) (*API, error) {
-	api, err := cloudflare.NewWithAPIToken(cfg.APIToken, cloudflare.HTTPClient(httpc.NewHTTPClient()))
-	if err != nil {
-		return nil, err
-	}
-
-	cf := &API{
-		cf:  api,
-		cfg: cfg,
-	}
-	return cf, nil
+func newWithAPIToken(token string) (*cloudflare.API, error) {
+	return cloudflare.NewWithAPIToken(token, cloudflare.HTTPClient(httpc.NewHTTPClient()))
 }
 
 // Name implements the provider.API interface.
@@ -64,12 +117,12 @@ func (api *API) Name() string {
 
 // UpdateZone implements the provider.API interface.
 func (api *API) UpdateZone(ctx context.Context) error {
-	if api.id == "" {
-		id, err := api.cf.ZoneIDByName(api.cfg.Zone)
+	if api.zoneID == "" {
+		id, err := api.cf.ZoneIDByName(api.Zone)
 		if err != nil {
 			return fmt.Errorf("cloudflare api error: failed to retrieve zone id: %w", err)
 		}
-		api.id = id
+		api.zoneID = id
 	}
 
 	publicIP, err := ip.GetIP(ctx)
@@ -77,7 +130,7 @@ func (api *API) UpdateZone(ctx context.Context) error {
 		return err
 	}
 
-	records, err := api.cf.DNSRecords(ctx, api.id, cloudflare.DNSRecord{})
+	records, err := api.cf.DNSRecords(ctx, api.zoneID, cloudflare.DNSRecord{})
 	if err != nil {
 		return fmt.Errorf("cloudflare api error: failed to list dns records: %w", err)
 	}
@@ -101,7 +154,7 @@ func (api *API) UpdateZone(ctx context.Context) error {
 				ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
 				defer cancel()
 
-				if err := api.cf.UpdateDNSRecord(ctx, api.id, r.ID, rr); err != nil {
+				if err := api.cf.UpdateDNSRecord(ctx, api.zoneID, r.ID, rr); err != nil {
 					return fmt.Errorf("error updating %s: %w", r.Name, err)
 				}
 				log.Infof("updated %s from %s to %s", r.Name, r.Content, publicIP)

@@ -13,13 +13,13 @@ func TestLoad(t *testing.T) {
 }
 
 func TestLoadFromEnv(t *testing.T) {
-	err := os.Setenv("CLOUDFLARE_API_KEY", "difiowehfhsahsdshndjqwh")
+	err := os.Setenv("DDNS_PROVIDER", "Cloudflare")
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	_, err = New("../../test/envconfig.json")
-	if err != nil {
+	cfg := &Configuration{}
+	if err = cfg.LoadFromEnv(); err != nil {
 		t.Fatal(err)
 	}
 }
