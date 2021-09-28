@@ -21,8 +21,8 @@ Configuration example:
   "provider": "Cloudflare",
   "zone": "domain.com",
   "email": "email@domain.com",
-  "apikey": "API_KEY",
-  "apitoken": "API_TOKEN",
+  "apikey": "XXXXXXXXXXXXXXXXXXXXXXXXXXX",
+  "apitoken": "XXXXXXXXXXXXXXXXXXXXXXXXXXX",
   "exclude": ["example.domain.com"],
   "interval": 5
 }
@@ -110,8 +110,8 @@ data:
       "provider": "Cloudflare",
       "zone": "domain.com",
       "email": "email@domain.com",
-      "apikey": "API_KEY",
-      "apitoken": "API_TOKEN",
+      "apikey": "XXXXXXXXXXXXXXXXXXXXXXXXXXX",
+      "apitoken": "XXXXXXXXXXXXXXXXXXXXXXXXXXX",
       "exclude": ["example.domain.com"],
       "interval": 5
     }
