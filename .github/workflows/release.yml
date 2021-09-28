@@ -7,7 +7,7 @@ on:
 
 jobs:
   goreleaser:
-    name: Create Release
+    name: Create Github Release
     runs-on: ubuntu-latest
 
     steps:
