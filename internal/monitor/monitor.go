@@ -94,6 +94,7 @@ func (m *Monitor) providerUpdateZone() {
 
 // Stop implements the service.Service interface.
 func (m *Monitor) Stop(s service.Service) error {
+	log.Infoln("Stopping service.")
 	m.stop <- true
 	return nil
 }
