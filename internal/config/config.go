@@ -3,7 +3,9 @@ package config
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"os"
+	"strconv"
 )
 
 // Configuration stores Provider configuration.
@@ -30,6 +32,15 @@ func (c *Configuration) LoadFromEnv() error {
 		return errors.New("no provider is configured")
 	}
 	c.Provider = provider
+
+	interval, found := os.LookupEnv("DDNS_UPDATE_INTERVAL")
+	if found {
+		i, err := strconv.Atoi(interval)
+		if err != nil {
+			return fmt.Errorf("invalid update interval value: %s", interval)
+		}
+		c.Interval = i
+	}
 
 	return nil
 }
