@@ -79,6 +79,7 @@ func (m *Monitor) Run() {
 			m.providerUpdateZone()
 
 		case <-m.stop:
+			ticker.Stop()
 			return
 		}
 	}
