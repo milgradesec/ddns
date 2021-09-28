@@ -28,7 +28,7 @@ type Monitor struct {
 	provider provider.DNSProvider
 
 	interval time.Duration
-	stop     chan bool
+	stop     chan struct{}
 }
 
 func New(cfg *config.Configuration) *Monitor {
@@ -42,12 +42,13 @@ func New(cfg *config.Configuration) *Monitor {
 	return &Monitor{
 		cfg:      cfg,
 		interval: interval,
-		stop:     make(chan bool),
 	}
 }
 
 // Start implements the service.Service interface.
 func (m *Monitor) Start(s service.Service) error {
+	m.stop = make(chan struct{})
+
 	cloudflareDNS, err := cf.New()
 	if err != nil {
 		return fmt.Errorf("error creating Cloudflare API client: %w", err)
@@ -95,6 +96,6 @@ func (m *Monitor) providerUpdateZone() {
 // Stop implements the service.Service interface.
 func (m *Monitor) Stop(s service.Service) error {
 	log.Infoln("Stopping service.")
-	m.stop <- true
+	close(m.stop)
 	return nil
 }
