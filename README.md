@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/milgradesec/ddns/actions/workflows/golang-ci.yml/badge.svg)](https://github.com/milgradesec/ddns/actions/workflows/golang-ci.yml)
 [![Docker CI](https://github.com/milgradesec/ddns/actions/workflows/docker-ci.yml/badge.svg)](https://github.com/milgradesec/ddns/actions/workflows/docker-ci.yml)
-[![Codecov](https://codecov.io/gh/milgradesec/ddns/branch/master/graph/badge.svg)](https://codecov.io/gh/milgradesec/ddns)
+[![Codecov](https://codecov.io/gh/milgradesec/ddns/branch/main/graph/badge.svg)](https://codecov.io/gh/milgradesec/ddns)
 [![Go Report Card](https://goreportcard.com/badge/milgradesec/ddns)](https://goreportcard.com/badge/github.com/milgradesec/ddns)
 ![Latest Release](https://img.shields.io/github/v/release/milgradesec/ddns)
 [![Go Reference](https://pkg.go.dev/badge/github.com/milgradesec/ddns.svg)](https://pkg.go.dev/github.com/milgradesec/ddns)
