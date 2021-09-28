@@ -90,8 +90,8 @@ spec:
               readOnly: true
           resources:
             limits:
-              memory: "128Mi"
               cpu: "500m"
+              memory: "64Mi"
       volumes:
         - name: config
           configMap:
