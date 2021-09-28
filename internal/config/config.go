@@ -15,14 +15,19 @@ type Configuration struct {
 	Interval int      `json:"interval"`
 }
 
-// IsExcluded determines if a domain is excluded from changes.
-func (c *Configuration) IsExcluded(s string) bool {
-	for _, e := range c.Exclude {
-		if s == e {
-			return true
-		}
+// New configuration from file.
+func New(file string) (cfg *Configuration, err error) {
+	f, err := os.Open(file)
+	if err != nil {
+		return nil, err
 	}
-	return false
+	defer f.Close()
+
+	err = json.NewDecoder(f).Decode(&cfg)
+	if err != nil {
+		return nil, err
+	}
+	return cfg, nil
 }
 
 // LoadFromEnv reads configuration from environment variables.
@@ -45,17 +50,12 @@ func (c *Configuration) LoadFromEnv() error {
 	return nil
 }
 
-// New configuration from file.
-func New(file string) (cfg *Configuration, err error) {
-	f, err := os.Open(file)
-	if err != nil {
-		return nil, err
+// IsExcluded determines if a domain is excluded from changes.
+func (c *Configuration) IsExcluded(s string) bool {
+	for _, e := range c.Exclude {
+		if s == e {
+			return true
+		}
 	}
-	defer f.Close()
-
-	err = json.NewDecoder(f).Decode(&cfg)
-	if err != nil {
-		return nil, err
-	}
-	return cfg, nil
+	return false
 }
