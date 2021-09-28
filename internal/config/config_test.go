@@ -13,13 +13,16 @@ func TestLoad(t *testing.T) {
 }
 
 func TestLoadFromEnv(t *testing.T) {
-	err := os.Setenv("DDNS_PROVIDER", "Cloudflare")
-	if err != nil {
+	if err := os.Setenv("DDNS_PROVIDER", "Cloudflare"); err != nil {
+		t.Fatal(err)
+	}
+
+	if err := os.Setenv("DDNS_UPDATE_INTERVAL", "3"); err != nil {
 		t.Fatal(err)
 	}
 
 	cfg := &Configuration{}
-	if err = cfg.LoadFromEnv(); err != nil {
+	if err := cfg.LoadFromEnv(); err != nil {
 		t.Fatal(err)
 	}
 }
