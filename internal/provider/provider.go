@@ -6,5 +6,6 @@ import "context"
 // to query and modify records for a domain.
 type DNSProvider interface {
 	Name() string
+	GetZoneName() string
 	UpdateZone(ctx context.Context) error
 }

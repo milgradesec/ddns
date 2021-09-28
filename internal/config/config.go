@@ -9,10 +9,6 @@ import (
 // Configuration stores Provider configuration.
 type Configuration struct {
 	Provider string   `json:"provider"`
-	Zone     string   `json:"zone"`
-	Email    string   `json:"email"`
-	APIKey   string   `json:"apikey"`
-	APIToken string   `json:"apitoken"`
 	Exclude  []string `json:"exclude"`
 	Interval int      `json:"interval"`
 }

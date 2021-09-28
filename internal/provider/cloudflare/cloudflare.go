@@ -116,6 +116,11 @@ func (cf *CloudflareDNS) Name() string {
 	return "Cloudflare"
 }
 
+// GetZoneName implements the provider.DNSProvider interface.
+func (cf *CloudflareDNS) GetZoneName() string {
+	return cf.Zone
+}
+
 // UpdateZone implements provider.DNSProvider interface.
 func (cf *CloudflareDNS) UpdateZone(ctx context.Context) error {
 	if cf.zoneID == "" {

@@ -21,13 +21,13 @@ const (
 )
 
 // Monitor runs in a infinite loop and triggers provider zone updates
-// every 3 min interval, can be triggered at any time by sending a
+// every 5 min interval, can be triggered at any time by sending a
 // SIGHUP signal.
 type Monitor struct {
 	ConfigFile string
 
-	cfg *config.Configuration
-	api provider.DNSProvider
+	cfg      *config.Configuration
+	provider provider.DNSProvider
 }
 
 // Start implements the service.Service interface.
@@ -39,11 +39,11 @@ func (m *Monitor) Start(s service.Service) error {
 	m.cfg = cfg
 	log.Infof("Configuration loaded from file: %s", m.ConfigFile)
 
-	cfAPI, err := cf.New(cfg)
+	cfDNS, err := cf.New(cfg)
 	if err != nil {
 		return fmt.Errorf("error creating Cloudflare API client: %w", err)
 	}
-	m.api = cfAPI
+	m.provider = cfDNS
 
 	go func() {
 		m.Run()
@@ -73,7 +73,7 @@ func (m *Monitor) Run() {
 				m.callProvider()
 
 			case <-sighup:
-				log.Infof("SIGHUP received: updating records for %s", m.cfg.Zone)
+				log.Infof("SIGHUP received: updating records for %s", m.provider.GetZoneName())
 				m.callProvider()
 			}
 		}
@@ -85,8 +85,8 @@ func (m *Monitor) callProvider() {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	if err := m.api.UpdateZone(ctx); err != nil {
-		log.Errorf("error updating zone %s: %v", m.cfg.Zone, err)
+	if err := m.provider.UpdateZone(ctx); err != nil {
+		log.Errorf("error updating zone %s: %v", m.provider.GetZoneName(), err)
 	}
 }
 
