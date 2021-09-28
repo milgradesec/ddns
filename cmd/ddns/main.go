@@ -6,6 +6,7 @@ import (
 	"runtime"
 
 	"github.com/kardianos/service"
+	"github.com/milgradesec/ddns/internal/config"
 	"github.com/milgradesec/ddns/internal/monitor"
 	log "github.com/sirupsen/logrus"
 )
@@ -30,18 +31,18 @@ func main() {
 		return
 	}
 
-	m := &monitor.Monitor{
-		ConfigFile: *configFlag,
+	cfg, err := config.New(*configFlag)
+	if err != nil {
+		log.Fatalf("failed to load configuration: %v", err)
 	}
+	log.Infof("Configuration loaded from file: %s", *configFlag)
 
-	svcConfig := &service.Config{
+	svc, err := service.New(monitor.New(cfg), &service.Config{
 		Name:        "ddns",
 		DisplayName: "ddns",
 		Description: "Dynamic DNS service",
 		Arguments:   []string{"-config", *configFlag},
-	}
-
-	svc, err := service.New(m, svcConfig)
+	})
 	if err != nil {
 		log.Fatalf("%v.", err)
 	}

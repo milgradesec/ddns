@@ -24,26 +24,23 @@ const (
 // every 5 min interval, can be triggered at any time by sending a
 // SIGHUP signal.
 type Monitor struct {
-	ConfigFile string
-
 	cfg      *config.Configuration
 	provider provider.DNSProvider
 }
 
+func New(cfg *config.Configuration) *Monitor {
+	return &Monitor{
+		cfg: cfg,
+	}
+}
+
 // Start implements the service.Service interface.
 func (m *Monitor) Start(s service.Service) error {
-	cfg, err := config.New(m.ConfigFile)
-	if err != nil {
-		return fmt.Errorf("failed to load configuration: %w", err)
-	}
-	m.cfg = cfg
-	log.Infof("Configuration loaded from file: %s", m.ConfigFile)
-
-	cfDNS, err := cf.New(cfg)
+	cloudflareDNS, err := cf.New()
 	if err != nil {
 		return fmt.Errorf("error creating Cloudflare API client: %w", err)
 	}
-	m.provider = cfDNS
+	m.provider = cloudflareDNS
 
 	go func() {
 		m.Run()
@@ -66,22 +63,22 @@ func (m *Monitor) Run() {
 
 	stop := make(chan bool)
 	go func() {
-		m.callProvider()
+		m.providerUpdateZone()
 		for {
 			select {
 			case <-ticker.C:
-				m.callProvider()
+				m.providerUpdateZone()
 
 			case <-sighup:
 				log.Infof("SIGHUP received: updating records for %s", m.provider.GetZoneName())
-				m.callProvider()
+				m.providerUpdateZone()
 			}
 		}
 	}()
 	<-stop
 }
 
-func (m *Monitor) callProvider() {
+func (m *Monitor) providerUpdateZone() {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
