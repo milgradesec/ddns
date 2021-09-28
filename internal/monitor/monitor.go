@@ -26,7 +26,9 @@ const (
 type Monitor struct {
 	cfg      *config.Configuration
 	provider provider.DNSProvider
+
 	interval time.Duration
+	stop     chan bool
 }
 
 func New(cfg *config.Configuration) *Monitor {
@@ -40,6 +42,7 @@ func New(cfg *config.Configuration) *Monitor {
 	return &Monitor{
 		cfg:      cfg,
 		interval: interval,
+		stop:     make(chan bool),
 	}
 }
 
@@ -59,25 +62,25 @@ func (m *Monitor) Start(s service.Service) error {
 
 // Run implements the service.Service interface.
 func (m *Monitor) Run() {
-	ticker := time.NewTicker(m.interval)
 	sighup := make(chan os.Signal, 1)
 	signal.Notify(sighup, syscall.SIGHUP)
 
-	stop := make(chan bool)
-	go func() {
-		m.providerUpdateZone()
-		for {
-			select {
-			case <-ticker.C:
-				m.providerUpdateZone()
+	ticker := time.NewTicker(m.interval)
 
-			case <-sighup:
-				log.Infof("SIGHUP received: updating records for %s", m.provider.GetZoneName())
-				m.providerUpdateZone()
-			}
+	m.providerUpdateZone()
+	for {
+		select {
+		case <-ticker.C:
+			m.providerUpdateZone()
+
+		case <-sighup:
+			log.Infof("SIGHUP received: updating records for %s", m.provider.GetZoneName())
+			m.providerUpdateZone()
+
+		case <-m.stop:
+			return
 		}
-	}()
-	<-stop
+	}
 }
 
 func (m *Monitor) providerUpdateZone() {
@@ -91,5 +94,6 @@ func (m *Monitor) providerUpdateZone() {
 
 // Stop implements the service.Service interface.
 func (m *Monitor) Stop(s service.Service) error {
+	m.stop <- true
 	return nil
 }
