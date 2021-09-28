@@ -49,7 +49,7 @@ services:
         target: /config.json
     environment:
       # Set the API Token/Key in env
-      - CLOUDFLARE_API_TOKEN=API_TOKEN
+      - CLOUDFLARE_API_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXX
       # Or use a docker secret
       - CLOUDFLARE_API_TOKEN_FILE=/run/secrets/api_token
     secrets:
@@ -57,6 +57,64 @@ services:
     deploy:
       restart_policy:
         delay: 5s
+```
+
+Kubernetes example:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ddns
+spec:
+  selector:
+    matchLabels:
+      app: ddns
+  template:
+    metadata:
+      labels:
+        app: ddns
+    spec:
+      containers:
+        - name: ddns
+          image: ghcr.io/milgradesec/ddns:latest
+          args:
+            - "-config"
+            - "/config/config.json"
+          env:
+            - name: CLOUDFLARE_API_TOKEN
+              value: "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
+          volumeMounts:
+            - name: config
+              mountPath: /config
+              readOnly: true
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+      volumes:
+        - name: config
+          configMap:
+            name: ddns-config
+            items:
+              - path: config.json
+                key: config.json
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ddns-config
+data:
+  config.json: |
+    {
+      "provider": "Cloudflare",
+      "zone": "domain.com",
+      "email": "email@domain.com",
+      "apikey": "API_KEY",
+      "apitoken": "API_TOKEN",
+      "exclude": ["example.domain.com"],
+      "interval": 5
+    }
 ```
 
 Start `ddns` especifiying the configuration file:
