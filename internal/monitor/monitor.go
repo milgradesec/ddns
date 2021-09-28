@@ -26,11 +26,20 @@ const (
 type Monitor struct {
 	cfg      *config.Configuration
 	provider provider.DNSProvider
+	interval time.Duration
 }
 
 func New(cfg *config.Configuration) *Monitor {
+	var interval time.Duration
+	if cfg.Interval != 0 {
+		interval = time.Duration(cfg.Interval) * time.Minute
+	} else {
+		interval = defaultInterval
+	}
+
 	return &Monitor{
-		cfg: cfg,
+		cfg:      cfg,
+		interval: interval,
 	}
 }
 
@@ -50,14 +59,7 @@ func (m *Monitor) Start(s service.Service) error {
 
 // Run implements the service.Service interface.
 func (m *Monitor) Run() {
-	var interval time.Duration
-	if m.cfg.Interval != 0 {
-		interval = time.Duration(m.cfg.Interval) * time.Minute
-	} else {
-		interval = defaultInterval
-	}
-
-	ticker := time.NewTicker(interval)
+	ticker := time.NewTicker(m.interval)
 	sighup := make(chan os.Signal, 1)
 	signal.Notify(sighup, syscall.SIGHUP)
 
