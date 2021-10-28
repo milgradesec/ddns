@@ -42,7 +42,7 @@ Options:
   "apikey": "XXXXXXXXXXXXXXXXXXXXXXXXXXX",
   "apitoken": "XXXXXXXXXXXXXXXXXXXXXXXXXXX",
   "exclude": ["example.domain.com"],
-  "interval": 3 // Minutes (Default: 5)
+  "interval": 3
 }
 ```
 
