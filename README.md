@@ -14,7 +14,7 @@
 
 ## Usage
 
-### CLI Reference
+### 📜 CLI Reference
 
 ```shell
 Usage: ddns [options]
@@ -59,7 +59,7 @@ ddns -service install
 ddns -service start
 ```
 
-### Docker
+### 🐋 Docker
 
 `docker-compose.yaml` example:
 
@@ -92,7 +92,7 @@ services:
         delay: 5s
 ```
 
-### Kubernetes
+### ☸️ Kubernetes
 
 `deployment.yaml` example:
 
