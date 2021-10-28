@@ -14,6 +14,24 @@
 
 ## Usage
 
+### CLI Reference
+
+```shell
+Usage: ddns [options]
+
+Options:
+  -config string
+        Set configuration file. (default "config.json")
+  -help
+        Show help.
+  -service string
+        Manage DDNS as a system service
+  -version
+        Show version information.
+```
+
+### Example
+
 `config.json` example:
 
 ```json
@@ -24,24 +42,26 @@
   "apikey": "XXXXXXXXXXXXXXXXXXXXXXXXXXX",
   "apitoken": "XXXXXXXXXXXXXXXXXXXXXXXXXXX",
   "exclude": ["example.domain.com"],
-  "interval": 5
+  "interval": 3 // Minutes (Default: 5)
 }
 ```
 
 Start `ddns` especifiying the configuration file:
 
-```cmd
+```shell
 ddns -config config.json
 ```
 
 Run `ddns` as a system service:
 
-```cmd
+```shell
 ddns -service install
 ddns -service start
 ```
 
-Docker `docker-compose.yaml` example:
+### Docker
+
+`docker-compose.yaml` example:
 
 ```yaml
 version: "3.8"
@@ -72,7 +92,9 @@ services:
         delay: 5s
 ```
 
-Kubernetes `deployment.yaml` example:
+### Kubernetes
+
+`deployment.yaml` example:
 
 ```yaml
 apiVersion: apps/v1
