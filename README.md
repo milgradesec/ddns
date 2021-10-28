@@ -6,7 +6,7 @@
 [![Go Report Card](https://goreportcard.com/badge/milgradesec/ddns)](https://goreportcard.com/badge/github.com/milgradesec/ddns)
 ![Latest Release](https://img.shields.io/github/v/release/milgradesec/ddns)
 [![Go Reference](https://pkg.go.dev/badge/github.com/milgradesec/ddns.svg)](https://pkg.go.dev/github.com/milgradesec/ddns)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/milgradesec/ddns/blob/master/LICENSE)
+![GitHub](https://img.shields.io/github/license/milgradesec/ddns)
 
 ## Dynamic DNS for Cloudflare
 
