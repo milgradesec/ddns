@@ -14,7 +14,7 @@
 
 ## Usage
 
-Configuration example:
+`config.json` example:
 
 ```json
 {
@@ -28,7 +28,20 @@ Configuration example:
 }
 ```
 
-Docker Compose example:
+Start `ddns` especifiying the configuration file:
+
+```cmd
+ddns -config config.json
+```
+
+Run `ddns` as a system service:
+
+```cmd
+ddns -service install
+ddns -service start
+```
+
+Docker `docker-compose.yaml` example:
 
 ```yaml
 version: "3.8"
@@ -59,7 +72,7 @@ services:
         delay: 5s
 ```
 
-Kubernetes example:
+Kubernetes `deployment.yaml` example:
 
 ```yaml
 apiVersion: apps/v1
@@ -115,17 +128,4 @@ data:
       "exclude": ["example.domain.com"],
       "interval": 5
     }
-```
-
-Start `ddns` especifiying the configuration file:
-
-```cmd
-ddns -config config.json
-```
-
-Use `ddns` as a system service:
-
-```cmd
-ddns -service install
-ddns -service start
 ```
