@@ -8,9 +8,9 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/kardianos/service"
 	"github.com/rs/zerolog/log"
 
-	"github.com/kardianos/service"
 	"github.com/milgradesec/ddns/internal/config"
 	"github.com/milgradesec/ddns/internal/provider"
 	cf "github.com/milgradesec/ddns/internal/provider/cloudflare"
@@ -26,23 +26,34 @@ const (
 type Monitor struct {
 	config   *config.Configuration
 	provider provider.DNSProvider
+
+	interval time.Duration
+	stop     chan struct{}
+}
+
+func New(config *config.Configuration) *Monitor {
+	var interval time.Duration
+	if config.Interval != 0 {
+		interval = time.Duration(config.Interval) * time.Minute
+	} else {
+		interval = defaultInterval
+	}
+
+	return &Monitor{
+		config:   config,
+		interval: interval,
+	}
 }
 
 // Start implements the service.Service interface.
 func (m *Monitor) Start(s service.Service) error {
-	config, err := config.Load()
-	if err != nil {
-		return fmt.Errorf("failed to load configuration: %w", err)
-	}
-	m.config = config
+	m.stop = make(chan struct{})
 
-	log.Info().Msgf("Using %s provider", config.Provider)
-
-	cfAPI, err := cf.New(config)
+	cloudflareDNS, err := cf.New(m.config)
 	if err != nil {
-		return fmt.Errorf("error creating Cloudflare API client: %w", err)
+		return fmt.Errorf("error creating cloudflare API client: %w", err)
 	}
-	m.provider = cfAPI
+	m.provider = cloudflareDNS
 
 	go func() {
 		m.Run()
@@ -52,44 +63,40 @@ func (m *Monitor) Start(s service.Service) error {
 
 // Run implements the service.Service interface.
 func (m *Monitor) Run() {
-	var interval time.Duration
-	if m.config.Interval != 0 {
-		interval = time.Duration(m.config.Interval) * time.Minute
-	} else {
-		interval = defaultInterval
-	}
-
-	ticker := time.NewTicker(interval)
 	sighup := make(chan os.Signal, 1)
 	signal.Notify(sighup, syscall.SIGHUP)
 
-	stop := make(chan bool)
-	go func() {
-		m.callProvider()
-		for {
-			select {
-			case <-ticker.C:
-				m.callProvider()
+	ticker := time.NewTicker(m.interval)
 
-			case <-sighup:
-				log.Info().Msgf("SIGHUP: updating records for %s", m.config.Zone)
-				m.callProvider()
-			}
+	m.providerUpdateZone()
+	for {
+		select {
+		case <-ticker.C:
+			m.providerUpdateZone()
+
+		case <-sighup:
+			log.Info().Msgf("SIGHUP: updating records for %s", m.provider.GetZoneName())
+			m.providerUpdateZone()
+
+		case <-m.stop:
+			ticker.Stop()
+			return
 		}
-	}()
-	<-stop
+	}
 }
 
-func (m *Monitor) callProvider() {
+func (m *Monitor) providerUpdateZone() {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
 	if err := m.provider.UpdateZone(ctx); err != nil {
-		log.Error().Msgf("error updating zone %s: %v", m.config.Zone, err)
+		log.Error().Msgf("error updating zone %s: %v", m.provider.GetZoneName(), err)
 	}
 }
 
 // Stop implements the service.Service interface.
 func (m *Monitor) Stop(s service.Service) error {
+	log.Info().Msg("Stopping service.")
+	close(m.stop)
 	return nil
 }
