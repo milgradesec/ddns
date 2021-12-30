@@ -24,16 +24,6 @@ func Load() (*Configuration, error) {
 	return config, nil
 }
 
-// IsExcluded determines if a domain is excluded from changes.
-func (c *Configuration) IsExcluded(s string) bool {
-	for _, e := range c.Exclude {
-		if s == e {
-			return true
-		}
-	}
-	return false
-}
-
 func (c *Configuration) LoadFromEnv() error {
 	provider, found := os.LookupEnv("DDNS_PROVIDER")
 	if !found {
@@ -57,4 +47,14 @@ func (c *Configuration) LoadFromEnv() error {
 	}
 
 	return nil
+}
+
+// IsExcluded determines if a domain is excluded from changes.
+func (c *Configuration) IsExcluded(s string) bool {
+	for _, e := range c.Exclude {
+		if s == e {
+			return true
+		}
+	}
+	return false
 }
