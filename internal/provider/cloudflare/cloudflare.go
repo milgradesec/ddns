@@ -92,24 +92,6 @@ func New(config *config.Configuration) (*CloudflareDNS, error) { //nolint
 	return nil, errors.New("unable to find Cloudflare API credentials")
 }
 
-// func newWithAPIToken(token string) (*cloudflare.API, error) {
-// 	return cloudflare.NewWithAPIToken(token, cloudflare.HTTPClient(httpc.NewHTTPClient()))
-// }
-
-// func newWithAPIKey(key string, email string) (*cloudflare.API, error) {
-// 	return cloudflare.New(key, email, cloudflare.HTTPClient(httpc.NewHTTPClient()))
-// }
-
-// Name implements the provider.DNSProvider interface.
-func (cf *CloudflareDNS) Name() string {
-	return "Cloudflare"
-}
-
-// GetZoneName implements the provider.DNSProvider interface.
-func (cf *CloudflareDNS) GetZoneName() string {
-	return cf.Zone
-}
-
 // Creates a Cloudflare Provider using API Token.
 func newWithAPIToken(apiToken string, config *config.Configuration) (*CloudflareDNS, error) {
 	api, err := cloudflare.NewWithAPIToken(apiToken, cloudflare.HTTPClient(httpc.NewHTTPClient()))
@@ -138,6 +120,16 @@ func newWithAPIKey(apiKey, email string, config *config.Configuration) (*Cloudfl
 		config: config,
 	}
 	return cf, nil
+}
+
+// Name implements the provider.DNSProvider interface.
+func (cf *CloudflareDNS) Name() string {
+	return "Cloudflare"
+}
+
+// GetZoneName implements the provider.DNSProvider interface.
+func (cf *CloudflareDNS) GetZoneName() string {
+	return cf.Zone
 }
 
 // UpdateZone implements provider.DNSProvider interface.
