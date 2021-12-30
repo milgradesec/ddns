@@ -3,6 +3,8 @@ package cloudflare
 import (
 	"os"
 	"testing"
+
+	"github.com/milgradesec/ddns/internal/config"
 )
 
 func TestNew(t *testing.T) {
@@ -14,7 +16,7 @@ func TestNew(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if _, err := New(); err != nil {
+	if _, err := New(&config.Configuration{}); err != nil {
 		t.Fatal(err)
 	}
 }

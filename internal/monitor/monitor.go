@@ -38,7 +38,7 @@ func (m *Monitor) Start(s service.Service) error {
 
 	log.Info().Msgf("Using %s provider", config.Provider)
 
-	cfAPI, err := cf.New()
+	cfAPI, err := cf.New(config)
 	if err != nil {
 		return fmt.Errorf("error creating Cloudflare API client: %w", err)
 	}
