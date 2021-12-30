@@ -49,7 +49,7 @@ services:
       - source: config.json
         target: /config.json
     environment:
-      # Set the API Token/Key in env
+      # Provide the API Token as an environment variable
       - CLOUDFLARE_API_TOKEN=API_TOKEN
       # Or use a docker secret
       - CLOUDFLARE_API_TOKEN_FILE=/run/secrets/api_token
