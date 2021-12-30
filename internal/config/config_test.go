@@ -5,13 +5,6 @@ import (
 	"testing"
 )
 
-// func TestLoad(t *testing.T) {
-// 	_, err := New("../../test/config.json")
-// 	if err != nil {
-// 		t.Fatal(err)
-// 	}
-// }
-
 func TestLoad(t *testing.T) {
 	if err := os.Setenv("DDNS_PROVIDER", "Cloudflare"); err != nil {
 		t.Fatal(err)

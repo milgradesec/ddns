@@ -17,11 +17,11 @@ type Configuration struct {
 
 // New configuration from environment.
 func Load() (*Configuration, error) {
-	cfg := &Configuration{}
-	if err := cfg.LoadFromEnv(); err != nil {
+	config := &Configuration{}
+	if err := config.LoadFromEnv(); err != nil {
 		return nil, err
 	}
-	return cfg, nil
+	return config, nil
 }
 
 // IsExcluded determines if a domain is excluded from changes.
@@ -33,13 +33,6 @@ func (c *Configuration) IsExcluded(s string) bool {
 	}
 	return false
 }
-
-// type APIAuthType int
-
-// const (
-// 	APIToken APIAuthType = iota
-// 	APIKey
-// )
 
 // LoadFromEnv reads the API Key or Token from environment variables.
 func (c *Configuration) LoadFromEnv() error {

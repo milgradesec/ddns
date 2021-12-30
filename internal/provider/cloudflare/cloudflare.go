@@ -4,9 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/cloudflare/cloudflare-go"
@@ -36,58 +34,19 @@ func New() (*CloudflareDNS, error) { //nolint
 		email    string
 		apiKey   string
 		apiToken string
+		found    bool
 	)
 
-	zone, found := os.LookupEnv("CLOUDFLARE_ZONE")
+	zone, found = os.LookupEnv("CLOUDFLARE_ZONE")
 	if !found {
-		return nil, errors.New("cloudflare zone not set")
+		return nil, errors.New("CLOUDFLARE_ZONE not set")
 	}
+	log.Info().Msgf("CLOUDFLARE_ZONE ==> %s", zone)
 
-	email, found = os.LookupEnv("CLOUDFLARE_EMAIL")
-	if !found {
-		return nil, errors.New("cloudflare mail not set")
-	}
-
-	apiKey, found = os.LookupEnv("CLOUDFLARE_API_KEY")
-	if !found {
-		keyFile, found := os.LookupEnv("CLOUDFLARE_API_KEY_FILE")
-		if found {
-			buf, err := ioutil.ReadFile(keyFile)
-			if err != nil {
-				return nil, err
-			}
-			apiKey = strings.TrimSpace(string(buf))
-		}
-	}
-
-	if apiKey != "" {
-		cfAPI, err := newWithAPIKey(apiKey, email)
-		if err != nil {
-			return nil, err
-		}
-
-		return &CloudflareDNS{
-			Zone:   zone,
-			Email:  email,
-			APIKey: apiKey,
-			api:    cfAPI,
-		}, nil
-	}
-
+	// Authenticate using an API Token
 	apiToken, found = os.LookupEnv("CLOUDFLARE_API_TOKEN")
-	if !found {
-		tokenFile, found := os.LookupEnv("CLOUDFLARE_API_TOKEN_FILE")
-		if found {
-			buf, err := ioutil.ReadFile(tokenFile)
-			if err != nil {
-				return nil, err
-			}
-			apiToken = strings.TrimSpace(string(buf))
-		}
-	}
-
-	if apiToken != "" {
-		cfAPI, err := newWithAPIToken(apiToken)
+	if found {
+		api, err := newWithAPIToken(apiToken)
 		if err != nil {
 			return nil, err
 		}
@@ -96,19 +55,95 @@ func New() (*CloudflareDNS, error) { //nolint
 			Zone:     zone,
 			Email:    email,
 			APIToken: apiToken,
-			api:      cfAPI,
+			api:      api,
 		}, nil
 	}
+
+	// Authenticate using Email + API Key
+	email, found = os.LookupEnv("CLOUDFLARE_EMAIL")
+	if found {
+		apiKey, found = os.LookupEnv("CLOUDFLARE_API_KEY")
+		if found {
+			api, err := newWithAPIKey(apiKey, email)
+			if err != nil {
+				return nil, err
+			}
+
+			return &CloudflareDNS{
+				Zone:   zone,
+				Email:  email,
+				APIKey: apiKey,
+				api:    api,
+			}, nil
+		}
+	}
+
+	// if !found {
+	// 	tokenFile, found := os.LookupEnv("CLOUDFLARE_API_TOKEN_FILE")
+	// 	if found {
+	// 		buf, err := ioutil.ReadFile(tokenFile)
+	// 		if err != nil {
+	// 			return nil, err
+	// 		}
+	// 		apiToken = strings.TrimSpace(string(buf))
+	// 	}
+	// }
+
+	// apiKey, found = os.LookupEnv("CLOUDFLARE_API_KEY")
+	// if !found {
+	// 	keyFile, found := os.LookupEnv("CLOUDFLARE_API_KEY_FILE")
+	// 	if found {
+	// 		buf, err := ioutil.ReadFile(keyFile)
+	// 		if err != nil {
+	// 			return nil, err
+	// 		}
+	// 		apiKey = strings.TrimSpace(string(buf))
+	// 	}
+	// }
+
+	// if apiKey != "" {
+	// 	cfAPI, err := newWithAPIKey(apiKey, email)
+	// 	if err != nil {
+	// 		return nil, err
+	// 	}
+
+	// 	return &CloudflareDNS{
+	// 		Zone:   zone,
+	// 		Email:  email,
+	// 		APIKey: apiKey,
+	// 		api:    cfAPI,
+	// 	}, nil
+	// }
 
 	return nil, errors.New("no Cloudflare API credentials found")
 }
 
-func newWithAPIKey(key string, email string) (*cloudflare.API, error) {
-	return cloudflare.New(key, email, cloudflare.HTTPClient(httpc.NewHTTPClient()))
-}
+// func determineAuthType() string {
+// 	var (
+// 		emailFound    bool
+// 		apiKeyFound   bool
+// 		apiTokenFound bool
+// 	)
+
+// 	_, apiTokenFound = os.LookupEnv("CLOUDFLARE_API_TOKEN")
+// 	if apiTokenFound {
+// 		return "token"
+// 	}
+
+// 	_, emailFound = os.LookupEnv("CLOUDFLARE_EMAIL")
+// 	_, apiKeyFound = os.LookupEnv("CLOUDFLARE_API_KEY")
+// 	if emailFound && apiKeyFound {
+// 		return "key"
+// 	}
+// 	return ""
+// }
 
 func newWithAPIToken(token string) (*cloudflare.API, error) {
 	return cloudflare.NewWithAPIToken(token, cloudflare.HTTPClient(httpc.NewHTTPClient()))
+}
+
+func newWithAPIKey(key string, email string) (*cloudflare.API, error) {
+	return cloudflare.New(key, email, cloudflare.HTTPClient(httpc.NewHTTPClient()))
 }
 
 // Name implements the provider.DNSProvider interface.
