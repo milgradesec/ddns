@@ -11,7 +11,10 @@
       "mode": "auto",
       "program": "${workspaceFolder}/cmd/ddns",
       "env": {},
-      "args": []
+      "args": [
+        "--config",
+        "../../test/realconfig.json"
+      ]
     },
     {
       "name": "Test",
