@@ -45,19 +45,6 @@ func New() (*CloudflareDNS, error) { //nolint
 	log.Info().Msgf("CLOUDFLARE_ZONE => %s", zone)
 
 	// Authenticate using an API Token
-	apiToken, found = os.LookupEnv("CLOUDFLARE_API_TOKEN")
-	if found {
-		log.Info().Msg("CLOUDFLARE_API_TOKEN found")
-
-		api, err := newWithAPIToken(apiToken)
-		if err != nil {
-			return nil, err
-		}
-		cf.api = api
-
-		return cf, nil
-	}
-
 	tokenFile, found := os.LookupEnv("CLOUDFLARE_API_TOKEN_FILE")
 	if found {
 		log.Info().Msg("CLOUDFLARE_API_TOKEN_FILE found")
@@ -77,66 +64,60 @@ func New() (*CloudflareDNS, error) { //nolint
 		return cf, nil
 	}
 
-	// Authenticate using Email + API Key
-	email, found = os.LookupEnv("CLOUDFLARE_EMAIL")
-	if found { //nolint
-		log.Info().Msg("CLOUDFLARE_EMAIL found")
+	apiToken, found = os.LookupEnv("CLOUDFLARE_API_TOKEN")
+	if found {
+		log.Info().Msg("CLOUDFLARE_API_TOKEN found")
 
-		apiKey, found = os.LookupEnv("CLOUDFLARE_API_KEY")
-		if found {
-			log.Info().Msg("CLOUDFLARE_API_KEY found")
-
-			api, err := newWithAPIKey(apiKey, email)
-			if err != nil {
-				return nil, err
-			}
-			cf.api = api
-
-			return cf, nil
+		api, err := newWithAPIToken(apiToken)
+		if err != nil {
+			return nil, err
 		}
+		cf.api = api
 
-		keyFile, found := os.LookupEnv("CLOUDFLARE_API_KEY_FILE")
-		if found {
-			log.Info().Msg("CLOUDFLARE_API_KEY_FILE found")
-
-			buf, err := ioutil.ReadFile(keyFile)
-			if err != nil {
-				return nil, err
-			}
-			apiKey = strings.TrimSpace(string(buf))
-
-			api, err := newWithAPIKey(apiKey, email)
-			if err != nil {
-				return nil, err
-			}
-			cf.api = api
-
-			return cf, nil
-		}
+		return cf, nil
 	}
 
-	return nil, errors.New("no Cloudflare API credentials found")
+	// Authenticate using Email + API Key
+	email, found = os.LookupEnv("CLOUDFLARE_EMAIL")
+	if !found {
+		return nil, errors.New("no Cloudflare API credentials found")
+	}
+	log.Info().Msg("CLOUDFLARE_EMAIL found")
+
+	keyFile, found := os.LookupEnv("CLOUDFLARE_API_KEY_FILE")
+	if found {
+		log.Info().Msg("CLOUDFLARE_API_KEY_FILE found")
+
+		buf, err := ioutil.ReadFile(keyFile)
+		if err != nil {
+			return nil, err
+		}
+		apiKey = strings.TrimSpace(string(buf))
+
+		api, err := newWithAPIKey(apiKey, email)
+		if err != nil {
+			return nil, err
+		}
+		cf.api = api
+
+		return cf, nil
+	}
+
+	apiKey, found = os.LookupEnv("CLOUDFLARE_API_KEY")
+	if found {
+		log.Info().Msg("CLOUDFLARE_API_KEY found")
+
+		api, err := newWithAPIKey(apiKey, email)
+		if err != nil {
+			return nil, err
+		}
+		cf.api = api
+
+		return cf, nil
+	}
+
+	return nil, errors.New("unable to find Cloudflare API credentials")
 }
-
-// func determineAuthType() string {
-// 	var (
-// 		emailFound    bool
-// 		apiKeyFound   bool
-// 		apiTokenFound bool
-// 	)
-
-// 	_, apiTokenFound = os.LookupEnv("CLOUDFLARE_API_TOKEN")
-// 	if apiTokenFound {
-// 		return "token"
-// 	}
-
-// 	_, emailFound = os.LookupEnv("CLOUDFLARE_EMAIL")
-// 	_, apiKeyFound = os.LookupEnv("CLOUDFLARE_API_KEY")
-// 	if emailFound && apiKeyFound {
-// 		return "key"
-// 	}
-// 	return ""
-// }
 
 func newWithAPIToken(token string) (*cloudflare.API, error) {
 	return cloudflare.NewWithAPIToken(token, cloudflare.HTTPClient(httpc.NewHTTPClient()))
