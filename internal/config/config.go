@@ -34,7 +34,6 @@ func (c *Configuration) IsExcluded(s string) bool {
 	return false
 }
 
-// LoadFromEnv reads the API Key or Token from environment variables.
 func (c *Configuration) LoadFromEnv() error {
 	provider, found := os.LookupEnv("DDNS_PROVIDER")
 	if !found {

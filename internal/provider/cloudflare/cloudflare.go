@@ -4,7 +4,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/cloudflare/cloudflare-go"
@@ -17,10 +19,7 @@ import (
 
 // CloudflareDNS implements provider.DNSProvider interface.
 type CloudflareDNS struct {
-	Zone     string
-	Email    string
-	APIKey   string
-	APIToken string
+	Zone string
 
 	zoneID string
 	config *config.Configuration
@@ -36,84 +35,85 @@ func New() (*CloudflareDNS, error) { //nolint
 		apiToken string
 		found    bool
 	)
+	cf := &CloudflareDNS{}
 
 	zone, found = os.LookupEnv("CLOUDFLARE_ZONE")
 	if !found {
 		return nil, errors.New("CLOUDFLARE_ZONE not set")
 	}
-	log.Info().Msgf("CLOUDFLARE_ZONE ==> %s", zone)
+	cf.Zone = zone
+	log.Info().Msgf("CLOUDFLARE_ZONE => %s", zone)
 
 	// Authenticate using an API Token
 	apiToken, found = os.LookupEnv("CLOUDFLARE_API_TOKEN")
 	if found {
+		log.Info().Msg("CLOUDFLARE_API_TOKEN found")
+
 		api, err := newWithAPIToken(apiToken)
 		if err != nil {
 			return nil, err
 		}
+		cf.api = api
 
-		return &CloudflareDNS{
-			Zone:     zone,
-			Email:    email,
-			APIToken: apiToken,
-			api:      api,
-		}, nil
+		return cf, nil
+	}
+
+	tokenFile, found := os.LookupEnv("CLOUDFLARE_API_TOKEN_FILE")
+	if found {
+		log.Info().Msg("CLOUDFLARE_API_TOKEN_FILE found")
+
+		buf, err := ioutil.ReadFile(tokenFile)
+		if err != nil {
+			return nil, err
+		}
+		apiToken = strings.TrimSpace(string(buf))
+
+		api, err := newWithAPIToken(apiToken)
+		if err != nil {
+			return nil, err
+		}
+		cf.api = api
+
+		return cf, nil
 	}
 
 	// Authenticate using Email + API Key
 	email, found = os.LookupEnv("CLOUDFLARE_EMAIL")
-	if found {
+	if found { //nolint
+		log.Info().Msg("CLOUDFLARE_EMAIL found")
+
 		apiKey, found = os.LookupEnv("CLOUDFLARE_API_KEY")
 		if found {
+			log.Info().Msg("CLOUDFLARE_API_KEY found")
+
 			api, err := newWithAPIKey(apiKey, email)
 			if err != nil {
 				return nil, err
 			}
+			cf.api = api
 
-			return &CloudflareDNS{
-				Zone:   zone,
-				Email:  email,
-				APIKey: apiKey,
-				api:    api,
-			}, nil
+			return cf, nil
+		}
+
+		keyFile, found := os.LookupEnv("CLOUDFLARE_API_KEY_FILE")
+		if found {
+			log.Info().Msg("CLOUDFLARE_API_KEY_FILE found")
+
+			buf, err := ioutil.ReadFile(keyFile)
+			if err != nil {
+				return nil, err
+			}
+			apiKey = strings.TrimSpace(string(buf))
+
+			api, err := newWithAPIKey(apiKey, email)
+			if err != nil {
+				return nil, err
+			}
+			cf.api = api
+
+			return cf, nil
 		}
 	}
-
-	// if !found {
-	// 	tokenFile, found := os.LookupEnv("CLOUDFLARE_API_TOKEN_FILE")
-	// 	if found {
-	// 		buf, err := ioutil.ReadFile(tokenFile)
-	// 		if err != nil {
-	// 			return nil, err
-	// 		}
-	// 		apiToken = strings.TrimSpace(string(buf))
-	// 	}
-	// }
-
-	// apiKey, found = os.LookupEnv("CLOUDFLARE_API_KEY")
-	// if !found {
-	// 	keyFile, found := os.LookupEnv("CLOUDFLARE_API_KEY_FILE")
-	// 	if found {
-	// 		buf, err := ioutil.ReadFile(keyFile)
-	// 		if err != nil {
-	// 			return nil, err
-	// 		}
-	// 		apiKey = strings.TrimSpace(string(buf))
-	// 	}
-	// }
-
-	// if apiKey != "" {
-	// 	cfAPI, err := newWithAPIKey(apiKey, email)
-	// 	if err != nil {
-	// 		return nil, err
-	// 	}
-
-	// 	return &CloudflareDNS{
-	// 		Zone:   zone,
-	// 		Email:  email,
-	// 		APIKey: apiKey,
-	// 		api:    cfAPI,
-	// 	}, nil
-	// }
 
 	return nil, errors.New("no Cloudflare API credentials found")
 }
