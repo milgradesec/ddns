@@ -35,16 +35,13 @@ func main() {
 		return
 	}
 
-	m := &monitor.Monitor{
-		ConfigFile: *configFlag,
-	}
 	svcConfig := &service.Config{
 		Name:        "ddns",
 		DisplayName: "ddns",
 		Description: "Dynamic DNS service",
 		Arguments:   []string{"-config", *configFlag},
 	}
-	svc, err := service.New(m, svcConfig)
+	svc, err := service.New(&monitor.Monitor{}, svcConfig)
 	if err != nil {
 		log.Fatal().Msgf("%v.", err)
 	}

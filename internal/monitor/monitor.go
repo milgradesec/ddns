@@ -21,29 +21,28 @@ const (
 )
 
 // Monitor runs in a infinite loop and triggers provider zone updates
-// every 3 min interval, can be triggered at any time by sending a
+// every 5 min interval, can be triggered at any time by sending a
 // SIGHUP signal.
 type Monitor struct {
-	ConfigFile string
-
-	cfg *config.Configuration
-	api provider.DNSProvider
+	config   *config.Configuration
+	provider provider.DNSProvider
 }
 
 // Start implements the service.Service interface.
 func (m *Monitor) Start(s service.Service) error {
-	cfg, err := config.New(m.ConfigFile)
+	config, err := config.Load()
 	if err != nil {
 		return fmt.Errorf("failed to load configuration: %w", err)
 	}
-	m.cfg = cfg
-	log.Info().Msgf("Configuration loaded from file: %s", m.ConfigFile)
+	m.config = config
 
-	cfAPI, err := cf.New(cfg)
+	log.Info().Msgf("Using %s provider", config.Provider)
+
+	cfAPI, err := cf.New()
 	if err != nil {
 		return fmt.Errorf("error creating Cloudflare API client: %w", err)
 	}
-	m.api = cfAPI
+	m.provider = cfAPI
 
 	go func() {
 		m.Run()
@@ -54,8 +53,8 @@ func (m *Monitor) Start(s service.Service) error {
 // Run implements the service.Service interface.
 func (m *Monitor) Run() {
 	var interval time.Duration
-	if m.cfg.Interval != 0 {
-		interval = time.Duration(m.cfg.Interval) * time.Minute
+	if m.config.Interval != 0 {
+		interval = time.Duration(m.config.Interval) * time.Minute
 	} else {
 		interval = defaultInterval
 	}
@@ -73,7 +72,7 @@ func (m *Monitor) Run() {
 				m.callProvider()
 
 			case <-sighup:
-				log.Info().Msgf("SIGHUP: updating records for %s", m.cfg.Zone)
+				log.Info().Msgf("SIGHUP: updating records for %s", m.config.Zone)
 				m.callProvider()
 			}
 		}
@@ -85,8 +84,8 @@ func (m *Monitor) callProvider() {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	if err := m.api.UpdateZone(ctx); err != nil {
-		log.Error().Msgf("error updating zone %s: %v", m.cfg.Zone, err)
+	if err := m.provider.UpdateZone(ctx); err != nil {
+		log.Error().Msgf("error updating zone %s: %v", m.config.Zone, err)
 	}
 }
 
