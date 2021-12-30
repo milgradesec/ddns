@@ -10,7 +10,7 @@ import (
 	"github.com/milgradesec/ddns/pkg/ip"
 
 	httpc "github.com/milgradesec/go-libs/http"
-	log "github.com/sirupsen/logrus"
+	"github.com/rs/zerolog/log"
 )
 
 // API implements provider.API interface.
@@ -104,7 +104,7 @@ func (api *API) UpdateZone(ctx context.Context) error {
 				if err := api.cf.UpdateDNSRecord(ctx, api.id, r.ID, rr); err != nil {
 					return fmt.Errorf("error updating %s: %w", r.Name, err)
 				}
-				log.Infof("updated %s from %s to %s", r.Name, r.Content, publicIP)
+				log.Info().Msgf("updated %s from %s to %s", r.Name, r.Content, publicIP)
 			}
 		}
 	}

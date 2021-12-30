@@ -8,7 +8,7 @@ import (
 	"syscall"
 	"time"
 
-	log "github.com/sirupsen/logrus"
+	"github.com/rs/zerolog/log"
 
 	"github.com/kardianos/service"
 	"github.com/milgradesec/ddns/internal/config"
@@ -37,7 +37,7 @@ func (m *Monitor) Start(s service.Service) error {
 		return fmt.Errorf("failed to load configuration: %w", err)
 	}
 	m.cfg = cfg
-	log.Infof("Configuration loaded from file: %s", m.ConfigFile)
+	log.Info().Msgf("Configuration loaded from file: %s", m.ConfigFile)
 
 	cfAPI, err := cf.New(cfg)
 	if err != nil {
@@ -73,7 +73,7 @@ func (m *Monitor) Run() {
 				m.callProvider()
 
 			case <-sighup:
-				log.Infof("SIGHUP received: updating records for %s", m.cfg.Zone)
+				log.Info().Msgf("SIGHUP: updating records for %s", m.cfg.Zone)
 				m.callProvider()
 			}
 		}
@@ -86,7 +86,7 @@ func (m *Monitor) callProvider() {
 	defer cancel()
 
 	if err := m.api.UpdateZone(ctx); err != nil {
-		log.Errorf("error updating zone %s: %v", m.cfg.Zone, err)
+		log.Error().Msgf("error updating zone %s: %v", m.cfg.Zone, err)
 	}
 }
 

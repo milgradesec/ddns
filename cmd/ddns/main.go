@@ -3,14 +3,19 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
 	"runtime"
 
 	"github.com/kardianos/service"
 	"github.com/milgradesec/ddns/internal/monitor"
-	log "github.com/sirupsen/logrus"
+
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 )
 
 func main() {
+	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stdout})
+
 	var (
 		versionFlag = flag.Bool("version", false, "Show version information.")
 		serviceFlag = flag.String("service", "", "Manage DDNS as a system service")
@@ -33,43 +38,40 @@ func main() {
 	m := &monitor.Monitor{
 		ConfigFile: *configFlag,
 	}
-
 	svcConfig := &service.Config{
 		Name:        "ddns",
 		DisplayName: "ddns",
 		Description: "Dynamic DNS service",
 		Arguments:   []string{"-config", *configFlag},
 	}
-
 	svc, err := service.New(m, svcConfig)
 	if err != nil {
-		log.Fatalf("%v.", err)
+		log.Fatal().Msgf("%v.", err)
 	}
 
 	if *serviceFlag != "" {
 		if err := service.Control(svc, *serviceFlag); err != nil {
-			log.Fatalf("%v", err)
+			log.Fatal().Msgf("%v", err)
 		}
 
 		switch *serviceFlag {
 		case "install":
-			log.Infoln("service created successfully")
+			log.Info().Msg("service created successfully")
 		case "uninstall":
-			log.Infoln("service removed successfully")
+			log.Info().Msg("service removed successfully")
 		case "start":
-			log.Infoln("service started")
+			log.Info().Msg("service started")
 		case "stop":
-			log.Infoln("service stopped")
+			log.Info().Msg("service stopped")
 		case "restart":
-			log.Infoln("service restarted")
+			log.Info().Msg("service restarted")
 		default:
-			log.Errorf("invalid argument: %s", *serviceFlag)
+			log.Error().Msgf("invalid argument: %s", *serviceFlag)
 		}
 		return
 	}
-
 	if err := svc.Run(); err != nil {
-		log.Fatalf("%v", err)
+		log.Fatal().Msgf("%v", err)
 	}
 }
 

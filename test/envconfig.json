@@ -2,6 +2,9 @@
   "provider": "Cloudflare",
   "zone": "domain.com",
   "email": "email@domain.com",
-  "exclude": ["example1.domain.com", "example2.domain.com"],
+  "exclude": [
+    "example1.domain.com",
+    "example2.domain.com"
+  ],
   "interval": 5
 }
