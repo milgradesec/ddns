@@ -21,9 +21,9 @@ import (
 type CloudflareDNS struct {
 	Zone string
 
-	zoneID string
-	api    *cloudflare.API
 	config *config.Configuration
+	api    *cloudflare.API
+	zoneID string
 }
 
 // New creates a Cloudflare DNS provider.
