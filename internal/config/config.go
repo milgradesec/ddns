@@ -16,8 +16,9 @@ type Configuration struct {
 }
 
 // New configuration from environment.
-func Load() (cfg *Configuration, err error) {
-	if err = cfg.LoadFromEnv(); err != nil {
+func Load() (*Configuration, error) {
+	cfg := &Configuration{}
+	if err := cfg.LoadFromEnv(); err != nil {
 		return nil, err
 	}
 	return cfg, nil

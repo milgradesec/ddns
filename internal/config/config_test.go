@@ -21,6 +21,10 @@ func TestLoad(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	if err := os.Setenv("DDNS_UPDATE_INTERVAL", "3"); err != nil {
+		t.Fatal(err)
+	}
+
 	if _, err := Load(); err != nil {
 		t.Fatal(err)
 	}
