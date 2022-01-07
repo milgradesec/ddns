@@ -6,7 +6,7 @@ require (
 	github.com/cenkalti/backoff v2.2.1+incompatible
 	github.com/cloudflare/cloudflare-go v0.29.0
 	github.com/kardianos/service v1.2.1
-	github.com/milgradesec/go-libs v0.0.0-20211222013716-6f06700a070b
+	github.com/milgradesec/go-libs v0.0.0-20220107183211-5e1051bbde19
 	github.com/rs/zerolog v1.26.1
 )
 
