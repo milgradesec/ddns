@@ -15,7 +15,20 @@
 
 ## Usage
 
-Configuration example:
+### 📜 CLI Reference
+
+```shell
+Usage: ddns [options]
+Options:
+  -service string
+        Manage DDNS as a system service
+  -version
+        Show version information.
+  -help
+        Show help.
+```
+
+<!-- Configuration example:
 
 ```json
 {
@@ -27,16 +40,14 @@ Configuration example:
   "exclude": ["example.domain.com"],
   "interval": 5
 }
-```
+``` -->
 
-Docker Compose example:
+### 🐋 Docker
+
+`docker-compose.yaml` example:
 
 ```yaml
 version: "3.8"
-
-configs:
-  config.json:
-    file: config.json
 
 secrets:
   api_token:
@@ -45,12 +56,13 @@ secrets:
 services:
   ddns:
     image: ghcr.io/milgradesec/ddns:latest
-    configs:
-      - source: config.json
-        target: /config.json
     environment:
-      # Provide the API Token as an environment variable
-      - CLOUDFLARE_API_TOKEN=API_TOKEN
+      # Set DDNS_PROVIDER
+      - DDNS_PROVIDER=Cloudflare
+      # Set DDNS_ZONE
+      - DDNS_ZONE=example.com
+      # Set the API Token
+      - CLOUDFLARE_API_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXX
       # Or use a docker secret
       - CLOUDFLARE_API_TOKEN_FILE=/run/secrets/api_token
     secrets:
@@ -60,7 +72,7 @@ services:
         delay: 5s
 ```
 
-Start `ddns` especifiying the configuration file:
+<!-- Start `ddns` especifiying the configuration file:
 
 ```cmd
 ddns -config config.json
@@ -71,4 +83,4 @@ Use `ddns` as a system service:
 ```cmd
 ddns -service install
 ddns -service start
-```
+``` -->
