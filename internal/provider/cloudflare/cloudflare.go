@@ -28,7 +28,7 @@ type CloudflareDNS struct {
 }
 
 // New creates a Cloudflare DNS provider.
-func New(config *config.Configuration) (*CloudflareDNS, error) { //nolint
+func New(config *config.Configuration) (*CloudflareDNS, error) {
 	var (
 		zone     string
 		email    string
