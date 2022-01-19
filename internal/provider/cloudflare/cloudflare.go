@@ -11,6 +11,7 @@ import (
 
 	"github.com/cloudflare/cloudflare-go"
 	httpc "github.com/milgradesec/go-libs/http"
+
 	"github.com/rs/zerolog/log"
 
 	"github.com/milgradesec/ddns/internal/config"
@@ -46,7 +47,7 @@ func New(config *config.Configuration) (*CloudflareDNS, error) { //nolint
 	// Authenticate using an API Token
 	tokenFile, found := os.LookupEnv("CLOUDFLARE_API_TOKEN_FILE")
 	if found {
-		log.Info().Msg("CLOUDFLARE_API_TOKEN_FILE found")
+		log.Info().Msg("Using CLOUDFLARE_API_TOKEN_FILE")
 
 		buf, err := ioutil.ReadFile(tokenFile)
 		if err != nil {
@@ -59,7 +60,7 @@ func New(config *config.Configuration) (*CloudflareDNS, error) { //nolint
 
 	apiToken, found = os.LookupEnv("CLOUDFLARE_API_TOKEN")
 	if found {
-		log.Info().Msg("CLOUDFLARE_API_TOKEN found")
+		log.Info().Msg("Using CLOUDFLARE_API_TOKEN")
 		return newWithAPIToken(apiToken, config)
 	}
 
@@ -68,11 +69,11 @@ func New(config *config.Configuration) (*CloudflareDNS, error) { //nolint
 	if !found {
 		return nil, errors.New("no Cloudflare API credentials found")
 	}
-	log.Info().Msg("CLOUDFLARE_EMAIL found")
+	log.Info().Msgf("CLOUDFLARE_EMAIL ==> %s", email)
 
 	keyFile, found := os.LookupEnv("CLOUDFLARE_API_KEY_FILE")
 	if found {
-		log.Info().Msg("CLOUDFLARE_API_KEY_FILE found")
+		log.Info().Msg("Using CLOUDFLARE_API_KEY_FILE")
 
 		buf, err := ioutil.ReadFile(keyFile)
 		if err != nil {
@@ -85,7 +86,7 @@ func New(config *config.Configuration) (*CloudflareDNS, error) { //nolint
 
 	apiKey, found = os.LookupEnv("CLOUDFLARE_API_KEY")
 	if found {
-		log.Info().Msg("CLOUDFLARE_API_KEY found")
+		log.Info().Msg("Using CLOUDFLARE_API_KEY")
 		return newWithAPIKey(apiKey, email, config)
 	}
 

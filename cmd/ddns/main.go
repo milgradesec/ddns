@@ -7,6 +7,7 @@ import (
 	"runtime"
 
 	"github.com/kardianos/service"
+	"github.com/milgradesec/ddns/internal/config"
 	"github.com/milgradesec/ddns/internal/monitor"
 
 	"github.com/rs/zerolog"
@@ -19,7 +20,6 @@ func main() {
 	var (
 		versionFlag = flag.Bool("version", false, "Show version information.")
 		serviceFlag = flag.String("service", "", "Manage DDNS as a system service")
-		configFlag  = flag.String("config", "config.json", "Set configuration file.")
 		helpFlag    = flag.Bool("help", false, "Show help.")
 	)
 	flag.Parse()
@@ -35,13 +35,18 @@ func main() {
 		return
 	}
 
+	config, err := config.Load()
+	if err != nil {
+		log.Fatal().Msgf("%v.", err)
+	}
+
 	svcConfig := &service.Config{
 		Name:        "ddns",
 		DisplayName: "ddns",
 		Description: "Dynamic DNS service",
-		Arguments:   []string{"-config", *configFlag},
 	}
-	svc, err := service.New(&monitor.Monitor{}, svcConfig)
+
+	svc, err := service.New(monitor.New(config), svcConfig)
 	if err != nil {
 		log.Fatal().Msgf("%v.", err)
 	}
