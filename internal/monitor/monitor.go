@@ -42,6 +42,7 @@ func New(config *config.Configuration) *Monitor {
 	return &Monitor{
 		config:   config,
 		interval: interval,
+		stop:     make(chan struct{}),
 	}
 }
 
