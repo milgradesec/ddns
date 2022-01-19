@@ -58,6 +58,7 @@ linters:
     - bidichk
     - tenv
     - errname
+    - gci
 
 run:
   skip-dirs:
