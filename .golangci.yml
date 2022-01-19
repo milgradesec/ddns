@@ -55,6 +55,9 @@ linters:
     - wastedassign
     - forcetypeassert
     - goheader
+    - bidichk
+    - tenv
+    - errname
 
 run:
   skip-dirs:
