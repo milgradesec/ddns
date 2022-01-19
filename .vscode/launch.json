@@ -10,11 +10,8 @@
       "request": "launch",
       "mode": "auto",
       "program": "${workspaceFolder}/cmd/ddns",
-      "env": {},
-      "args": [
-        "--config",
-        "../../test/realconfig.json"
-      ]
+      "envFile": "${workspaceFolder}/test/.env",
+      "args": []
     },
     {
       "name": "Test",
