@@ -84,3 +84,7 @@ Use `ddns` as a system service:
 ddns -service install
 ddns -service start
 ``` -->
+
+## 📜 License
+
+MIT License
