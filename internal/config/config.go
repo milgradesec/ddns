@@ -32,14 +32,14 @@ func (c *Configuration) LoadFromEnv() error {
 		return errors.New("DDNS_PROVIDER not set")
 	}
 	c.Provider = provider
-	log.Info().Msgf("DDNS_PROVIDER ==> %s", c.Provider)
+	log.Info().Msgf("DDNS_PROVIDER => %s", c.Provider)
 
 	zone, found := os.LookupEnv("DDNS_ZONE")
 	if !found {
 		return errors.New("DDNS_ZONE not set")
 	}
 	c.Zone = zone
-	log.Info().Msgf("DDNS_ZONE ==> %s", c.Zone)
+	log.Info().Msgf("DDNS_ZONE => %s", c.Zone)
 
 	interval, found := os.LookupEnv("DDNS_UPDATE_INTERVAL")
 	if found {
