@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/rs/zerolog/log"
 )
@@ -50,6 +51,13 @@ func (c *Configuration) LoadFromEnv() error {
 		c.Interval = i
 	}
 
+	exclusions, found := os.LookupEnv("DDNS_EXCLUDE")
+	if found {
+		list := strings.Split(exclusions, ",")
+		if len(list) > 0 {
+			c.Exclude = list
+		}
+	}
 	return nil
 }
 
