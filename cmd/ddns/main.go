@@ -37,7 +37,7 @@ func main() {
 
 	config, err := config.Load()
 	if err != nil {
-		log.Fatal().Msgf("%v.", err)
+		log.Fatal().Err(err).Msg("failed to load configuration")
 	}
 
 	svcConfig := &service.Config{
@@ -48,12 +48,12 @@ func main() {
 
 	svc, err := service.New(monitor.New(config), svcConfig)
 	if err != nil {
-		log.Fatal().Msgf("%v.", err)
+		log.Fatal().Err(err).Msg("failed to create service")
 	}
 
 	if *serviceFlag != "" {
 		if err := service.Control(svc, *serviceFlag); err != nil {
-			log.Fatal().Msgf("%v", err)
+			log.Fatal().Err(err).Msg("service control error")
 		}
 
 		switch *serviceFlag {
@@ -73,7 +73,7 @@ func main() {
 		return
 	}
 	if err := svc.Run(); err != nil {
-		log.Fatal().Msgf("%v", err)
+		log.Fatal().Err(err).Msg("failed to start service")
 	}
 }
 

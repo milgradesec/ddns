@@ -76,7 +76,7 @@ func (m *Monitor) Run() {
 			m.providerUpdateZone()
 
 		case <-sighup:
-			log.Info().Msgf("SIGHUP: updating records for %s", m.provider.GetZoneName())
+			log.Info().Str("provider", m.provider.Name()).Str("zone", m.provider.GetZoneName()).Msg("SIGHUP received, updating records")
 			m.providerUpdateZone()
 
 		case <-m.stop:
@@ -91,13 +91,13 @@ func (m *Monitor) providerUpdateZone() {
 	defer cancel()
 
 	if err := m.provider.UpdateZone(ctx); err != nil {
-		log.Error().Msgf("error updating zone %s: %v", m.provider.GetZoneName(), err)
+		log.Error().Err(err).Str("provider", m.provider.Name()).Str("zone", m.provider.GetZoneName()).Msg("error updating zone")
 	}
 }
 
 // Stop implements the service.Service interface.
 func (m *Monitor) Stop(s service.Service) error {
-	log.Info().Msg("Stopping service.")
+	log.Info().Msg("Stopping service")
 	close(m.stop)
 	return nil
 }

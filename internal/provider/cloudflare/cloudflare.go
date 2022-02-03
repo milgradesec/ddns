@@ -175,7 +175,7 @@ func (cf *CloudflareDNS) UpdateZone(ctx context.Context) error {
 				if err := cf.api.UpdateDNSRecord(ctx, cf.zoneID, r.ID, rr); err != nil {
 					return fmt.Errorf("error updating %s: %w", r.Name, err)
 				}
-				log.Info().Msgf("updated %s from %s to %s", r.Name, r.Content, publicIP)
+				log.Info().Str("provider", cf.Name()).Str("zone", cf.Zone).Msgf("updated %s from %s to %s", r.Name, r.Content, publicIP)
 			}
 		}
 	}
