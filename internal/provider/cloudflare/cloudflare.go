@@ -149,7 +149,7 @@ func (cf *CloudflareDNS) UpdateZone(ctx context.Context) error {
 		r := records[i]
 
 		if cf.config.IsExcluded(r.Name) {
-			log.Info().Str("provider", cf.Name()).Str("zone", cf.Zone).Msgf("'%s' excluded", r.Name)
+			log.Info().Str("provider", cf.Name()).Str("zone", cf.Zone).Msgf("record for '%s' excluded by configuration", r.Name)
 			continue
 		}
 
