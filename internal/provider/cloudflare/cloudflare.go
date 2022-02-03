@@ -42,13 +42,10 @@ func New(config *config.Configuration) (*CloudflareDNS, error) {
 		return nil, errors.New("CLOUDFLARE_ZONE not set")
 	}
 	config.Zone = zone
-	log.Info().Msgf("CLOUDFLARE_ZONE => %s", zone)
 
 	// Authenticate using an API Token
 	tokenFile, found := os.LookupEnv("CLOUDFLARE_API_TOKEN_FILE")
 	if found {
-		log.Info().Msg("Using CLOUDFLARE_API_TOKEN_FILE")
-
 		buf, err := ioutil.ReadFile(tokenFile)
 		if err != nil {
 			return nil, err
@@ -60,7 +57,6 @@ func New(config *config.Configuration) (*CloudflareDNS, error) {
 
 	apiToken, found = os.LookupEnv("CLOUDFLARE_API_TOKEN")
 	if found {
-		log.Info().Msg("Using CLOUDFLARE_API_TOKEN")
 		return newWithAPIToken(apiToken, config)
 	}
 
@@ -69,12 +65,9 @@ func New(config *config.Configuration) (*CloudflareDNS, error) {
 	if !found {
 		return nil, errors.New("no Cloudflare API credentials found")
 	}
-	log.Info().Msgf("CLOUDFLARE_EMAIL ==> %s", email)
 
 	keyFile, found := os.LookupEnv("CLOUDFLARE_API_KEY_FILE")
 	if found {
-		log.Info().Msg("Using CLOUDFLARE_API_KEY_FILE")
-
 		buf, err := ioutil.ReadFile(keyFile)
 		if err != nil {
 			return nil, err
@@ -86,7 +79,6 @@ func New(config *config.Configuration) (*CloudflareDNS, error) {
 
 	apiKey, found = os.LookupEnv("CLOUDFLARE_API_KEY")
 	if found {
-		log.Info().Msg("Using CLOUDFLARE_API_KEY")
 		return newWithAPIKey(apiKey, email, config)
 	}
 
