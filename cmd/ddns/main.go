@@ -24,9 +24,10 @@ func main() {
 	)
 	flag.Parse()
 
+	fmt.Println("DDNS-" + Version)
+	fmt.Printf("%s/%s, %s, %s\n", runtime.GOOS, runtime.GOARCH, runtime.Version(), Version)
+
 	if *versionFlag {
-		fmt.Println("DDNS-" + Version)
-		fmt.Printf("%s/%s, %s, %s\n", runtime.GOOS, runtime.GOARCH, runtime.Version(), Version)
 		return
 	}
 
