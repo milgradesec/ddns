@@ -28,20 +28,6 @@ Options:
         Show help.
 ```
 
-<!-- Configuration example:
-
-```json
-{
-  "provider": "Cloudflare",
-  "zone": "domain.com",
-  "email": "email@domain.com",
-  "apikey": "API_KEY",
-  "apitoken": "API_TOKEN",
-  "exclude": ["example.domain.com"],
-  "interval": 5
-}
-``` -->
-
 ### 🐋 Docker
 
 `docker-compose.yaml` example:
