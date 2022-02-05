@@ -72,19 +72,6 @@ services:
         delay: 5s
 ```
 
-<!-- Start `ddns` especifiying the configuration file:
-
-```cmd
-ddns -config config.json
-```
-
-Use `ddns` as a system service:
-
-```cmd
-ddns -service install
-ddns -service start
-``` -->
-
 ## 📜 License
 
 MIT License
