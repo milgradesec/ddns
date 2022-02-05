@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"os"
 	"runtime"
 
@@ -30,8 +29,8 @@ func main() {
 		zerolog.SetGlobalLevel(zerolog.DebugLevel)
 	}
 
-	fmt.Println("DDNS-" + Version)
-	fmt.Printf("%s/%s, %s, %s\n", runtime.GOOS, runtime.GOARCH, runtime.Version(), Version)
+	log.Info().Msg("DDNS-" + Version)
+	log.Info().Msgf("%s/%s, %s, %s\n", runtime.GOOS, runtime.GOARCH, runtime.Version(), Version)
 
 	if *versionFlag {
 		return
@@ -85,5 +84,5 @@ func main() {
 }
 
 var (
-	Version string
+	Version = "DEV"
 )
