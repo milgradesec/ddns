@@ -7,11 +7,11 @@ import (
 )
 
 func TestNew(t *testing.T) {
-	t.Setenv("CLOUDFLARE_ZONE", "example.com")
-
 	t.Setenv("CLOUDFLARE_API_TOKEN", "XXXxxXXXXXXxXXXXXXxxXXX")
 
-	if _, err := New(&config.Configuration{}); err != nil {
+	if _, err := New(&config.Configuration{
+		Zone: "example.com",
+	}); err != nil {
 		t.Fatal(err)
 	}
 }
