@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/cenkalti/backoff v2.2.1+incompatible
-	github.com/cloudflare/cloudflare-go v0.31.0
+	github.com/cloudflare/cloudflare-go v0.32.0
 	github.com/kardianos/service v1.2.1
 	github.com/milgradesec/go-libs v0.0.0-20220107183211-5e1051bbde19
 	github.com/rs/zerolog v1.26.1
