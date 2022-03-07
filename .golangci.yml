@@ -57,6 +57,8 @@ linters:
     - bidichk
     - tenv
     - errname
+  disable:
+    - typecheck
 
 run:
   skip-dirs:
