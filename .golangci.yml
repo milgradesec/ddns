@@ -25,7 +25,7 @@ linters:
     - staticcheck
     - structcheck
     - stylecheck
-    #- typecheck GH Actions bug?
+    - typecheck
     - unconvert
     - unparam
     - unused
