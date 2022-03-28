@@ -18,7 +18,7 @@ FROM alpine:3.15.2
 
 RUN apk update && \
     apk upgrade --available && \
-    apk --update --no-cache add ca-certificates && \
+    apk --no-cache add ca-certificates && \
     addgroup -S ddns && \
     adduser -S -G ddns ddns
 
