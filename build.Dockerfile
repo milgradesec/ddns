@@ -16,7 +16,9 @@ RUN make build
 
 FROM alpine:3.15.2
 
-RUN apk --update --no-cache add ca-certificates && \
+RUN apk update && \
+    apk upgrade --available && \
+    apk --update --no-cache add ca-certificates && \
     addgroup -S ddns && \
     adduser -S -G ddns ddns
 
