@@ -1,9 +1,11 @@
-name: Snyk Scan
+name: Snyk
 on: push
 
 jobs:
   security:
+    name: Code Scan
     runs-on: ubuntu-latest
+    
     steps:
       - uses: actions/checkout@v3
       - name: Run Snyk to check for vulnerabilities
