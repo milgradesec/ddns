@@ -1,7 +1,6 @@
 # https://golangci-lint.run/usage/configuration/
 
 run:
-  tests: false
   skip-dirs:
     - testdata
 
