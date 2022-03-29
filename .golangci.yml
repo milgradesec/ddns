@@ -1,5 +1,10 @@
 # https://golangci-lint.run/usage/configuration/
 
+run:
+  tests: false
+  skip-dirs:
+    - testdata
+
 linters:
   disable-all: true
   enable:
@@ -57,7 +62,3 @@ linters:
     - bidichk
     - tenv
     - errname
-
-run:
-  skip-dirs:
-    - testdata
