@@ -1,4 +1,4 @@
-FROM --platform=amd64 golang:1.18
+FROM --platform=amd64 golang:1.18 AS builder
 
 ARG TARGETPLATFORM
 ARG TARGETOS
@@ -14,19 +14,9 @@ COPY . .
 
 RUN make build
 
-FROM alpine:3.15.3
+FROM gcr.io/distroless/static-debian11:nonroot
 
-RUN apk update && \
-    apk upgrade --available && \
-    apk --no-cache add ca-certificates && \
-    addgroup -S ddns && \
-    adduser -S -G ddns ddns
+COPY --from=builder /go/src/app/ddns /ddns
 
-FROM scratch
-
-COPY --from=0 /go/src/app/ddns /ddns
-COPY --from=1 /etc/ssl/certs /etc/ssl/certs
-COPY --from=1 /etc/passwd /etc/passwd
-
-USER ddns
+USER nonroot
 ENTRYPOINT ["/ddns"]
