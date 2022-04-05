@@ -55,6 +55,7 @@ services:
       - api_token
     deploy:
       restart_policy:
+        condition: any
         delay: 5s
 ```
 
