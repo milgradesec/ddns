@@ -20,7 +20,7 @@ builds:
       - 386
 
 archives:
-  - name_template: "{{ .ProjectName }}-{{ .Os }}-{{ .Arch }}-{{ .Version }}"
+  - name_template: "{{ .ProjectName }}-{{ .Os }}-{{ .Arch }}-v{{ .Version }}"
     format: binary
     replacements:
       amd64: x86_64
