@@ -4,9 +4,9 @@ before:
 
 builds:
   - id: ddns
-    main: ./cmd/ddns/main.go
     env:
       - CGO_ENABLED=0
+    main: ./cmd/ddns/main.go
     flags:
       - -trimpath
     ldflags:
@@ -24,6 +24,9 @@ archives:
     format: binary
     replacements:
       amd64: x86_64
+
+checksum:
+  name_template: "checksums.txt"
 
 changelog:
   skip: true
