@@ -64,15 +64,15 @@ func main() {
 
 		switch *serviceFlag {
 		case "install":
-			log.Info().Msg("service created successfully")
+			log.Info().Msg("Service installed successfully.")
 		case "uninstall":
-			log.Info().Msg("service removed successfully")
+			log.Info().Msg("Service removed successfully.")
 		case "start":
-			log.Info().Msg("service started")
+			log.Info().Msg("Service started.")
 		case "stop":
-			log.Info().Msg("service stopped")
+			log.Info().Msg("Service stopped.")
 		case "restart":
-			log.Info().Msg("service restarted")
+			log.Info().Msg("Service restarted.")
 		default:
 			log.Error().Msgf("invalid argument: %s", *serviceFlag)
 		}
