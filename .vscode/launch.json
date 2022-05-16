@@ -8,7 +8,9 @@
       "mode": "auto",
       "program": "${workspaceFolder}/cmd/ddns",
       "envFile": "${workspaceFolder}/test/.env",
-      "args": []
+      "args": [
+        "-debug"
+      ]
     },
     {
       "name": "Test",
