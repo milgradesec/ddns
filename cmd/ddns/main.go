@@ -29,8 +29,8 @@ func main() {
 		zerolog.SetGlobalLevel(zerolog.DebugLevel)
 	}
 
-	log.Info().Msgf("DDNS %s\n", Version)
-	log.Info().Msgf("%s/%s, %s\n", runtime.GOOS, runtime.GOARCH, runtime.Version())
+	log.Info().Msgf("DDNS %s", Version)
+	log.Info().Msgf("%s/%s, %s", runtime.GOOS, runtime.GOARCH, runtime.Version())
 
 	if *versionFlag {
 		return
