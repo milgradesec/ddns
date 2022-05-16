@@ -1,3 +1,4 @@
+# Binaries
 *.exe
 *.exe~
 *.dll
@@ -7,14 +8,14 @@
 *.test
 *.out
 *.old
-.env
 ddns
 
-### Config ###
-realconfig.json
-
-### Goreleaser ##
+# Goreleaser
 /dist
 
-# Snyk
-.dccache
+# VS Code
+.vscode/
+!launch.json
+
+# Environment file
+.env
