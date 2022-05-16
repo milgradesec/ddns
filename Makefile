@@ -1,4 +1,4 @@
-VERSION     := $(shell git describe --tags --always --abbrev=0)
+VERSION     := $(shell git describe --tags --always --abbrev=8)
 SYSTEM      := 
 BUILDFLAGS  := -v -ldflags="-s -w -X main.Version=$(VERSION)"
 IMPORT_PATH := github.com/milgradesec/ddns
@@ -8,7 +8,7 @@ all: build
 
 .PHONY: build
 build:
-	CGO_ENABLED=$(CGO_ENABLED) $(SYSTEM) go build $(BUILDFLAGS) $(IMPORT_PATH)/cmd/ddns
+	$(SYSTEM) go build $(BUILDFLAGS) $(IMPORT_PATH)/cmd/ddns
 
 .PHONY: clean
 clean:
