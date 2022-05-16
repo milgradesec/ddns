@@ -55,28 +55,30 @@ func (m *Monitor) Start(s service.Service) error {
 		return fmt.Errorf("error creating cloudflare API client: %w", err)
 	}
 	m.provider = cloudflareDNS
+	log.Debug().Str("Using %s as DNS provider", m.provider.Name())
 
 	go func() {
-		m.Run()
+		m.run()
 	}()
 	return nil
 }
 
-// Run implements the service.Service interface.
-func (m *Monitor) Run() {
+func (m *Monitor) run() {
 	sighup := make(chan os.Signal, 1)
 	signal.Notify(sighup, syscall.SIGHUP)
 
 	ticker := time.NewTicker(m.interval)
 
+	log.Info().Str("provider", m.provider.Name()).Str("zone", m.provider.GetZoneName()).Msg("Running scheduled zone update")
 	m.providerUpdateZone()
 	for {
 		select {
 		case <-ticker.C:
+			log.Info().Str("provider", m.provider.Name()).Str("zone", m.provider.GetZoneName()).Msg("Running scheduled zone update")
 			m.providerUpdateZone()
 
 		case <-sighup:
-			log.Info().Str("provider", m.provider.Name()).Str("zone", m.provider.GetZoneName()).Msg("SIGHUP received, updating records")
+			log.Info().Str("provider", m.provider.Name()).Str("zone", m.provider.GetZoneName()).Msg("SIGHUP received, forcing zone update")
 			m.providerUpdateZone()
 
 		case <-m.stop:
@@ -98,6 +100,7 @@ func (m *Monitor) providerUpdateZone() {
 // Stop implements the service.Service interface.
 func (m *Monitor) Stop(s service.Service) error {
 	log.Info().Msg("Stopping service")
+
 	close(m.stop)
 	return nil
 }

@@ -6,6 +6,8 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/rs/zerolog/log"
 )
 
 // Configuration stores Provider configuration.
@@ -19,6 +21,8 @@ type Configuration struct {
 // New configuration from environment.
 func Load() (*Configuration, error) {
 	config := &Configuration{}
+
+	log.Debug().Msg("Loading configuration from environment variables")
 	if err := config.LoadFromEnv(); err != nil {
 		return nil, err
 	}
@@ -31,12 +35,14 @@ func (c *Configuration) LoadFromEnv() error {
 		return errors.New("DDNS_PROVIDER not set")
 	}
 	c.Provider = provider
+	log.Debug().Str("name", "DDNS_PROVIDER").Str("value", provider).Msg("Found environment variable")
 
 	zone, found := os.LookupEnv("DDNS_ZONE")
 	if !found {
 		return errors.New("DDNS_ZONE not set")
 	}
 	c.Zone = zone
+	log.Debug().Str("name", "DDNS_ZONE").Str("value", zone).Msg("Found environment variable")
 
 	interval, found := os.LookupEnv("DDNS_UPDATE_INTERVAL")
 	if found {
@@ -45,6 +51,7 @@ func (c *Configuration) LoadFromEnv() error {
 			return fmt.Errorf("invalid update interval value: %s", interval)
 		}
 		c.Interval = i
+		log.Debug().Str("name", "DDNS_UPDATE_INTERVAL").Str("value", interval).Msg("Found environment variable")
 	}
 
 	exclusions, found := os.LookupEnv("DDNS_EXCLUDE")
@@ -53,6 +60,7 @@ func (c *Configuration) LoadFromEnv() error {
 		if len(list) > 0 {
 			c.Exclude = list
 		}
+		log.Debug().Str("name", "DDNS_EXCLUDE").Str("value", exclusions).Msg("Found environment variable")
 	}
 	return nil
 }

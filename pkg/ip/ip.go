@@ -14,6 +14,10 @@ import (
 	httpc "github.com/milgradesec/go-libs/http"
 )
 
+const (
+	DefaultProviderName = "ipify"
+)
+
 type response struct {
 	IP string
 }
