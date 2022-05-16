@@ -59,6 +59,18 @@ services:
         delay: 5s
 ```
 
+## Development
+
+Create a file named `.env` inside test/ directory and set the appropriate environment variables. DO NOT COMMIT THIS FILE.
+
+`.env` file example:
+
+```env
+DDNS_PROVIDER=
+DDNS_ZONE=
+CLOUDFLARE_API_TOKEN=
+```
+
 ## 📜 License
 
 MIT License
