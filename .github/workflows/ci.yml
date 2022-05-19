@@ -1,8 +1,6 @@
 name: CI
 
-on:
-  push:
-  pull_request:
+on: [push, pull_request]
 
 jobs:
   build:
@@ -27,6 +25,9 @@ jobs:
 
       - name: Run tests with coverage
         run: go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
+
+      - name: Docker build
+        run: make docker
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
