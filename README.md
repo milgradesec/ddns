@@ -1,7 +1,6 @@
 # ddns
 
 ![CI](https://github.com/milgradesec/ddns/workflows/CI/badge.svg)
-[![Docker CI](https://github.com/milgradesec/ddns/actions/workflows/docker-ci.yml/badge.svg)](https://github.com/milgradesec/ddns/actions/workflows/docker-ci.yml)
 [![CodeQL](https://github.com/milgradesec/ddns/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/milgradesec/ddns/actions/workflows/codeql-analysis.yml)
 [![codecov](https://codecov.io/gh/milgradesec/ddns/branch/master/graph/badge.svg)](https://codecov.io/gh/milgradesec/ddns)
 [![Go Report Card](https://goreportcard.com/badge/milgradesec/ddns)](https://goreportcard.com/badge/github.com/milgradesec/ddns)
