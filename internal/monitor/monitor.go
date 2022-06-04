@@ -69,7 +69,7 @@ func (m *Monitor) run() {
 
 	ticker := time.NewTicker(m.interval)
 
-	log.Info().Str("provider", m.provider.Name()).Str("zone", m.provider.GetZoneName()).Msg("Running scheduled zone update")
+	log.Debug().Str("provider", m.provider.Name()).Str("zone", m.provider.GetZoneName()).Msg("Running scheduled zone update")
 	m.providerUpdateZone()
 	for {
 		select {
