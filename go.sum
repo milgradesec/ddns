@@ -17,6 +17,8 @@ github.com/mattn/go-isatty v0.0.14 h1:yVuAays6BHfxijgZPzw+3Zlu5yQgKGP2/hcQbHb7S9
 github.com/mattn/go-isatty v0.0.14/go.mod h1:7GGIvUiUoEMVVmxf/4nioHXj79iQHKdU27kJ6hsGG94=
 github.com/milgradesec/go-libs v0.0.0-20220425213745-f59aa77e7673 h1:SwWXmN8wGxcg849SRA6+VEimvTO7p3rcLid6j7GqyRs=
 github.com/milgradesec/go-libs v0.0.0-20220425213745-f59aa77e7673/go.mod h1:A6oJlLiKIyuj0k4Q8bwgMEpLntenS2e6j+kR3hC/5Wk=
+github.com/milgradesec/go-libs v0.0.0-20220701010932-cd9ffa5bd22e h1:REVEXuaeELBzBPB1gnVZIRBMlicoSw20TCM59XhfVUU=
+github.com/milgradesec/go-libs v0.0.0-20220701010932-cd9ffa5bd22e/go.mod h1:A6oJlLiKIyuj0k4Q8bwgMEpLntenS2e6j+kR3hC/5Wk=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
