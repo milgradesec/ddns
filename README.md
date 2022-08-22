@@ -17,7 +17,9 @@
 ### 📜 CLI Reference
 
 ```shell
-Usage: ddns [options]
+Usage: 
+  ddns [options]
+
 Options:
   -service string
         Manage DDNS as a system service
