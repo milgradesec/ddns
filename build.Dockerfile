@@ -9,6 +9,8 @@ ENV GO111MODULE=on \
     GOOS=${TARGETOS} \
     GOARCH=${TARGETARCH}
 
+LABEL org.opencontainers.image.source="https://github.com/milgradesec/ddns"
+
 WORKDIR /go/src/app
 COPY . .
 
@@ -16,7 +18,7 @@ RUN make build
 
 FROM gcr.io/distroless/static-debian11:nonroot
 
-COPY --from=builder /go/src/app/ddns /ddns
+COPY --from=builder  --chown=nonroot /go/src/app/ddns /ddns
 
 USER nonroot
 ENTRYPOINT ["/ddns"]
