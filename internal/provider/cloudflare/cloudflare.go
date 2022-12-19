@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strings"
 	"time"
@@ -37,7 +36,7 @@ func New(config *config.Configuration) (*CloudflareDNS, error) {
 	// Authenticate using an API Token
 	tokenFile, found := os.LookupEnv("CLOUDFLARE_API_TOKEN_FILE")
 	if found {
-		buf, err := ioutil.ReadFile(tokenFile)
+		buf, err := os.ReadFile(tokenFile)
 		if err != nil {
 			return nil, err
 		}
@@ -63,7 +62,7 @@ func New(config *config.Configuration) (*CloudflareDNS, error) {
 
 	keyFile, found := os.LookupEnv("CLOUDFLARE_API_KEY_FILE")
 	if found {
-		buf, err := ioutil.ReadFile(keyFile)
+		buf, err := os.ReadFile(keyFile)
 		if err != nil {
 			return nil, err
 		}
