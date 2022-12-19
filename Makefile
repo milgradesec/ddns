@@ -1,26 +1,35 @@
 VERSION     := $(shell git describe --tags --always --abbrev=8)
 SYSTEM      := 
-BUILDFLAGS  := -v -ldflags="-s -w -X main.Version=$(VERSION)"
+BUILDFLAGS  := -trimpath -ldflags="-s -w -X main.Version=$(VERSION)"
 IMPORT_PATH := github.com/milgradesec/ddns
+
+GOBIN := $(shell go env GOBIN)
+ifeq ($(GOBIN),)
+GOBIN = $(shell go env GOPATH)/bin
+endif
 
 .PHONY: all
 all: build
 
 .PHONY: build
 build:
-	$(SYSTEM) go build $(BUILDFLAGS) $(IMPORT_PATH)/cmd/ddns
+	go build $(BUILDFLAGS) $(IMPORT_PATH)/cmd/ddns
 
-.PHONY: clean
-clean:
-	go clean
+.PHONY: lint
+lint: $(GOBIN)/golangci-lint
+	$(GOBIN)/golangci-lint run
 
 .PHONY: test
 test:
 	go test -v ./...
 
-.PHONY: lint
-lint:
-	golangci-lint run
+.PHONY: cover
+cover:
+	go test \
+		-v \
+		-race \
+		-coverprofile=coverage.txt \
+		-covermode=atomic ./...
 
 .PHONY: docker
 docker: build

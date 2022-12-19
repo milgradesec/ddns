@@ -15,19 +15,12 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: ^1.19
-        id: go
 
-      - name: Get dependencies
-        run: go get -v -t -d ./...
-
-      - name: Go build
-        run: go build -v ./...
+      - name: Build
+        run: make build
 
       - name: Run tests with coverage
-        run: go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
-
-      - name: Docker build
-        run: make docker
+        run: make cover
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
