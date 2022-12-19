@@ -23,7 +23,6 @@ linters:
     - misspell
     - nakedret
     - nolintlint
-    - rowserrcheck
     - staticcheck
     - stylecheck
     - typecheck
@@ -49,8 +48,6 @@ linters:
     - nilerr
     - noctx
     - predeclared
-    - sqlclosecheck
-    - wastedassign
     - forcetypeassert
     - goheader
     - bidichk
