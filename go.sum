@@ -1,7 +1,7 @@
 github.com/cenkalti/backoff/v4 v4.2.0 h1:HN5dHm3WBOgndBH6E8V0q2jIYIR3s9yglV8k/+MN3u4=
 github.com/cenkalti/backoff/v4 v4.2.0/go.mod h1:Y3VNntkOUPxTVeUxJ/G5vcM//AlwfmyYozVcomhLiZE=
-github.com/cloudflare/cloudflare-go v0.56.0 h1:ipMEKt3/33fgv8CdHnxn9hba1HzJ67hf0VyCdprIaro=
-github.com/cloudflare/cloudflare-go v0.56.0/go.mod h1:Xv29BilsDBBZUneqqnSEJT4HRi1YMn4RvWitAVkESOI=
+github.com/cloudflare/cloudflare-go v0.57.0 h1:+MNQFoJ4IqtFFUj41aV5buB4f2vFyPMrQrgecH3XYxI=
+github.com/cloudflare/cloudflare-go v0.57.0/go.mod h1:cD8AqNMMaL1A0Sj9XKo3Xu9ZVHwHqgXJofb1ya210GQ=
 github.com/coreos/go-systemd/v22 v22.3.3-0.20220203105225-a9a7ef127534/go.mod h1:Y58oyj3AT4RCenI/lSvhwexgC+NSVTIJ3seZv2GcEnc=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
