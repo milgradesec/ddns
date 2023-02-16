@@ -22,8 +22,6 @@ builds:
 archives:
   - name_template: "{{ .ProjectName }}-{{ .Os }}-{{ .Arch }}-v{{ .Version }}"
     format: binary
-    replacements:
-      amd64: x86_64
 
 checksum:
   name_template: "checksums.txt"
