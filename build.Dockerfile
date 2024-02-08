@@ -16,7 +16,7 @@ COPY . .
 
 RUN make build
 
-FROM gcr.io/distroless/static-debian11:nonroot
+FROM gcr.io/distroless/static-debian12:nonroot
 
 COPY --from=builder  --chown=nonroot /go/src/app/ddns /ddns
 
