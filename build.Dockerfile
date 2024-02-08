@@ -1,4 +1,4 @@
-FROM --platform=amd64 golang:1.21.1 AS builder
+FROM --platform=amd64 golang:1.22.0 AS builder
 
 ARG TARGETPLATFORM
 ARG TARGETOS
@@ -16,7 +16,7 @@ COPY . .
 
 RUN make build
 
-FROM gcr.io/distroless/static-debian11:nonroot
+FROM gcr.io/distroless/static-debian12:nonroot
 
 COPY --from=builder  --chown=nonroot /go/src/app/ddns /ddns
 
