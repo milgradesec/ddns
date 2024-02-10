@@ -6,7 +6,7 @@ require (
 	github.com/cenkalti/backoff/v4 v4.2.1
 	github.com/cloudflare/cloudflare-go v0.57.1
 	github.com/kardianos/service v1.2.2
-	github.com/milgradesec/go-libs v0.0.0-20240201041003-c62ff03cd7a7
+	github.com/milgradesec/go-libs v0.0.0-20240210141059-14e5f3065e20
 	github.com/rs/zerolog v1.32.0
 )
 
