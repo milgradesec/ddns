@@ -7,7 +7,7 @@ require (
 	github.com/cloudflare/cloudflare-go v0.57.1
 	github.com/kardianos/service v1.2.2
 	github.com/milgradesec/go-libs v0.0.0-20240210141059-14e5f3065e20
-	github.com/rs/zerolog v1.32.0
+	github.com/rs/zerolog v1.33.0
 )
 
 require (
